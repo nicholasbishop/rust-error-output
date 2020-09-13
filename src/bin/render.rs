@@ -9,17 +9,19 @@ struct Output {
 
 impl Output {
     fn add_rust_block<S: AsRef<str>>(&mut self, contents: S) {
-        self.lines.push("'''rust".into());
-        self.lines
-            .extend(contents.as_ref().lines().map(|line| line.to_string()));
-        self.lines.push("'''".into());
+        self.add_code_block_impl(contents, "rust");
     }
 
     fn add_code_block<S: AsRef<str>>(&mut self, contents: S) {
-        self.lines.push("'''".into());
+        self.add_code_block_impl(contents, "");
+    }
+
+    fn add_code_block_impl<S: AsRef<str>>(&mut self, contents: S, mode: &str) {
+        let block = "```";
+        self.lines.push(block.to_string() + mode);
         self.lines
             .extend(contents.as_ref().lines().map(|line| line.to_string()));
-        self.lines.push("'''".into());
+        self.lines.push(block.into());
     }
 
     fn finalize(&self) -> String {
