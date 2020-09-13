@@ -14,6 +14,14 @@
 
 !!! main_result.rs
 
+## Display
+
+!!! display.rs
+
+## Debug
+
+!!! debug.rs
+
 ## Anyhow
 
 !!! anyhow.rs

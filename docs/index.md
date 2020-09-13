@@ -45,6 +45,30 @@ fn main() -> Result<(), std::io::Error> {
 Error: Os { code: 2, kind: NotFound, message: "No such file or directory" }
 ```
 
+## Display
+
+```rust
+fn main() {
+    let err = std::fs::remove_file("/this/file/does/not/exist").unwrap_err();
+    eprintln!("{}", err);
+}
+```
+```
+No such file or directory (os error 2)
+```
+
+## Debug
+
+```rust
+fn main() {
+    let err = std::fs::remove_file("/this/file/does/not/exist").unwrap_err();
+    eprintln!("{:?}", err);
+}
+```
+```
+Os { code: 2, kind: NotFound, message: "No such file or directory" }
+```
+
 ## Anyhow
 
 ```rust
