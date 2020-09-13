@@ -64,7 +64,7 @@ fn main() -> Result<(), Error> {
         }
     }
 
-    println!("{}", output.finalize());
+    fs::write("docs/index.md", output.finalize())?;
 
     Ok(())
 }

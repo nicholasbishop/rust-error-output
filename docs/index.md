@@ -1,37 +1,74 @@
-## Welcome to GitHub Pages
+## Explicit panic
 
-You can use the [editor on GitHub](https://github.com/nicholasbishop/rust-error-output/edit/main/docs/index.md) to maintain and preview the content for your website in Markdown files.
-
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
-
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+```rust
+fn main() {
+    panic!("oh no");
+}
+```
+```
+thread 'main' panicked at 'oh no', src/bin/panic.rs:2:5
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 ```
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+## Unwrap
 
-### Jekyll Themes
+```rust
+fn main() {
+    std::fs::remove_file("/this/file/does/not/exist").unwrap();
+}
+```
+```
+thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: Os { code: 2, kind: NotFound, message: "No such file or directory" }', src/bin/unwrap.rs:2:55
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+```
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/nicholasbishop/rust-error-output/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+## Expect
 
-### Support or Contact
+```rust
+fn main() {
+    std::fs::remove_file("/this/file/does/not/exist").expect("oh no");
+}
+```
+```
+thread 'main' panicked at 'oh no: Os { code: 2, kind: NotFound, message: "No such file or directory" }', src/bin/expect.rs:2:55
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+```
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+## Return `Result` from `main`
+
+```rust
+fn main() -> Result<(), std::io::Error> {
+    std::fs::remove_file("/this/file/does/not/exist")
+}
+```
+```
+Error: Os { code: 2, kind: NotFound, message: "No such file or directory" }
+```
+
+## Anyhow
+
+```rust
+fn main() -> Result<(), anyhow::Error> {
+    std::fs::remove_file("/this/file/does/not/exist")?;
+    Ok(())
+}
+```
+```
+Error: No such file or directory (os error 2)
+```
+
+## Anyhow with context
+
+```rust
+fn main() -> Result<(), anyhow::Error> {
+    use anyhow::Context;
+    std::fs::remove_file("/this/file/does/not/exist").context("oh no")?;
+    Ok(())
+}
+```
+```
+Error: oh no
+
+Caused by:
+    No such file or directory (os error 2)
+```
