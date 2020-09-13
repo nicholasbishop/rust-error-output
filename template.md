@@ -1,9 +1,23 @@
-lorem ipsum blah blah blah
+## Explicit panic
 
-!!! anyhow_context.rs
+!!! panic.rs
 
-blah blah blah
+## Unwrap
+
+!!! unwrap.rs
+
+## Expect
+
+!!! expect.rs
+
+## Return `Result` from `main`
 
 !!! main_result.rs
 
-end stuff
+## Anyhow
+
+!!! anyhow.rs
+
+## Anyhow with context
+
+!!! anyhow_context.rs

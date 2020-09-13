@@ -1,6 +1,7 @@
+use anyhow::{Context, Error};
 use command_run::Command;
+use std::fs;
 use std::path::Path;
-use std::{fs, io};
 
 #[derive(Default)]
 struct Output {
@@ -33,7 +34,7 @@ impl Output {
     }
 }
 
-fn main() -> io::Result<()> {
+fn main() -> Result<(), Error> {
     let template = include_str!("../../template.md");
 
     let mut output = Output::default();
@@ -43,7 +44,7 @@ fn main() -> io::Result<()> {
             let file_name = &line[prefix.len()..];
             let path = Path::new("src/bin").join(file_name);
 
-            let contents = fs::read_to_string(path)?;
+            let contents = fs::read_to_string(path).context(line)?;
             output.add_rust_block(contents);
 
             let mut cmd = Command::new(
