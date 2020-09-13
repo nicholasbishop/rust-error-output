@@ -3,6 +3,7 @@ name = "rust-error-examples"
 version = "0.1.0"
 authors = ["Nicholas Bishop <nicholasbishop@gmail.com>"]
 edition = "2018"
+publish = false
 
 [dependencies]
 anyhow = "1.0"
