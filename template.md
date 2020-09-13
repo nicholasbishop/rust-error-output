@@ -1,3 +1,7 @@
+---
+title: testx
+---
+
 ## Explicit panic
 
 !!! panic.rs
