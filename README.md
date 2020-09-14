@@ -5,3 +5,5 @@ reference to help answer the question, "what will my Rust program
 print if something goes wrong?".
 
 Rendered view: https://nicholasbishop.github.io/rust-error-output
+
+To build locally, run `make`.
