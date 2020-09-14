@@ -21,21 +21,23 @@ fn indent<S: AsRef<str>>(line: S) -> String {
     format!("    {}", line.as_ref())
 }
 
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
 enum ErrorType {
     Io,
     Anyhow,
+    ThisError,
 }
 
 impl ErrorType {
     fn all() -> Vec<ErrorType> {
-        vec![ErrorType::Io, ErrorType::Anyhow]
+        vec![ErrorType::Io, ErrorType::Anyhow, ErrorType::ThisError]
     }
 
     fn full_type_path(&self) -> &str {
         match self {
             ErrorType::Io => "std::io::Error",
             ErrorType::Anyhow => "anyhow::Error",
+            ErrorType::ThisError => "CustomError",
         }
     }
 
@@ -43,6 +45,7 @@ impl ErrorType {
         match self {
             ErrorType::Io => "io",
             ErrorType::Anyhow => "anyhow",
+            ErrorType::ThisError => "thiserror",
         }
     }
 }
@@ -81,6 +84,15 @@ impl Operation {
 fn gen_program(error_type: ErrorType, operation: Operation) -> Program {
     let mut program = Program::default();
 
+    if error_type == ErrorType::ThisError {
+        program.add_line("#[derive(Debug, thiserror::Error)]");
+        program.add_line("enum CustomError {");
+        program.add_line(indent("#[error(\"bad thing: {0}\")]"));
+        program.add_line(indent("BadThing(#[from] std::io::Error)"));
+        program.add_line("}");
+    }
+    program.add_empty();
+
     // Add make_error function
     program.add_line(format!(
         "fn make_error() -> Result<(), {}> {{",
@@ -91,6 +103,7 @@ fn gen_program(error_type: ErrorType, operation: Operation) -> Program {
     program.add_line(indent(match error_type {
         ErrorType::Io => io_error,
         ErrorType::Anyhow => format!("Ok({}?)", io_error),
+        ErrorType::ThisError => format!("Ok({}?)", io_error),
     }));
     program.add_line("}");
     program.add_empty();
