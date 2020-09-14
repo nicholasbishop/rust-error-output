@@ -1,3 +1,7 @@
+use command_run::Command;
+use std::fs;
+use std::path::Path;
+
 #[derive(Default)]
 struct Program {
     lines: Vec<String>,
@@ -34,8 +38,16 @@ impl ErrorType {
             ErrorType::Anyhow => "anyhow::Error",
         }
     }
+
+    fn short_name(&self) -> &str {
+        match self {
+            ErrorType::Io => "io",
+            ErrorType::Anyhow => "anyhow",
+        }
+    }
 }
 
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
 enum Operation {
     Debug,
     Display,
@@ -53,6 +65,16 @@ impl Operation {
             Operation::Expect,
             Operation::Return,
         ]
+    }
+
+    fn as_str(&self) -> &str {
+        match self {
+            Operation::Debug => "debug",
+            Operation::Display => "display",
+            Operation::Unwrap => "unwrap",
+            Operation::Expect => "expect",
+            Operation::Return => "return",
+        }
     }
 }
 
@@ -73,10 +95,14 @@ fn gen_program(error_type: ErrorType, operation: Operation) -> Program {
     program.add_line("}");
     program.add_empty();
 
-    program.add_line(format!(
-        "fn main() -> Result<(), {}> {{",
-        error_type.as_str()
-    ));
+    if operation == Operation::Return {
+        program.add_line(format!(
+            "fn main() -> Result<(), {}> {{",
+            error_type.as_str()
+        ));
+    } else {
+        program.add_line("fn main() {");
+    }
     program.add_line(indent(match operation {
         Operation::Debug => "eprintln!(\"{:?}\", make_error().unwrap_err())",
         Operation::Display => "eprintln!(\"{}\", make_error().unwrap_err())",
@@ -88,11 +114,22 @@ fn gen_program(error_type: ErrorType, operation: Operation) -> Program {
     program
 }
 
-fn main() {
+fn main() -> Result<(), anyhow::Error> {
     for err_type in ErrorType::all() {
         for operation in Operation::all() {
             let prog = gen_program(err_type, operation);
-            println!("{}", prog.lines.join("\n"));
+            let file_name =
+                format!("{}_{}.rs", err_type.short_name(), operation.as_str());
+            let contents = prog.lines.join("\n");
+            fs::write(Path::new("gen/src/bin").join(file_name), contents)?;
         }
     }
+
+    Command::new("cargo").set_dir("gen").add_arg("fmt").run()?;
+    Command::new("cargo")
+        .set_dir("gen")
+        .add_arg("build")
+        .run()?;
+
+    Ok(())
 }
