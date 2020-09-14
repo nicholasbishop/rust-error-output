@@ -105,3 +105,22 @@ Error: oh no
 Caused by:
     No such file or directory (os error 2)
 ```
+
+## Anyhow with even more context
+
+```rust
+fn main() -> Result<(), anyhow::Error> {
+    use anyhow::Context;
+    std::fs::remove_file("/this/file/does/not/exist")
+        .context("oh no")
+        .context("second context")?;
+    Ok(())
+}
+```
+```
+Error: second context
+
+Caused by:
+    0: oh no
+    1: No such file or directory (os error 2)
+```

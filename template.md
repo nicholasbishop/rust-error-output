@@ -38,3 +38,7 @@ All output in these examples goes to stderr, nothing goes to stdout.
 ## Anyhow with context
 
 !!! anyhow_context.rs
+
+## Anyhow with even more context
+
+!!! anyhow_context_2x.rs
