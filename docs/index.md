@@ -2,6 +2,8 @@
 title: ""
 ---
 
+All output in these examples goes to stderr, nothing goes to stdout.
+
 ## Explicit panic
 
 ```rust
