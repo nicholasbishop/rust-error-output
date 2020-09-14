@@ -1,2 +1,2 @@
 render:
-	cargo run --bin render
+	cargo build && cargo run --bin render
