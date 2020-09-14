@@ -2,6 +2,9 @@
 title: ""
 ---
 
+This is a reference to help answer this question: "what will my Rust
+program print if something goes wrong?"
+
 All output in these examples goes to stderr, nothing goes to stdout.
 
 ## Explicit panic
