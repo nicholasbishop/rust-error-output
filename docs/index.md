@@ -1,5 +1,5 @@
 ---
-title: testx
+title: ""
 ---
 
 ## Explicit panic
