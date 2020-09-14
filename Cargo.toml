@@ -8,3 +8,4 @@ publish = false
 [dependencies]
 anyhow = "1.0"
 command-run = "0.13"
+thiserror = "1.0"
