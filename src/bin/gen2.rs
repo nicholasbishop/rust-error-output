@@ -32,7 +32,7 @@ impl ErrorType {
         vec![ErrorType::Io, ErrorType::Anyhow]
     }
 
-    fn as_str(&self) -> &str {
+    fn full_type_path(&self) -> &str {
         match self {
             ErrorType::Io => "std::io::Error",
             ErrorType::Anyhow => "anyhow::Error",
@@ -84,7 +84,7 @@ fn gen_program(error_type: ErrorType, operation: Operation) -> Program {
     // Add make_error function
     program.add_line(format!(
         "fn make_error() -> Result<(), {}> {{",
-        error_type.as_str()
+        error_type.full_type_path()
     ));
     let bad_path = "/this/file/does/not/exist";
     let io_error = format!("std::fs::remove_file(\"{}\")", bad_path);
@@ -98,7 +98,7 @@ fn gen_program(error_type: ErrorType, operation: Operation) -> Program {
     if operation == Operation::Return {
         program.add_line(format!(
             "fn main() -> Result<(), {}> {{",
-            error_type.as_str()
+            error_type.full_type_path()
         ));
     } else {
         program.add_line("fn main() {");
