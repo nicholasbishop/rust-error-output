@@ -7,7 +7,7 @@ program print if something goes wrong?"
 
 All output in these examples goes to stderr, nothing goes to stdout.
 
-## Explicit panic
+## Panic
 
 !!! panic.rs
 
