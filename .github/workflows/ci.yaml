@@ -62,3 +62,23 @@ jobs:
         with:
           command: clippy
           args: -- -D warnings
+
+  render:
+    name: Verify rendered output is up to date
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+      - uses: actions-rs/cargo@v1
+        with:
+          command: build
+      - uses: actions-rs/cargo@v1
+        with:
+          command: run
+          args: --bin render
+      - run: |
+          git diff --exit-code docs/index.md
