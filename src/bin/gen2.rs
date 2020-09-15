@@ -30,18 +30,25 @@ fn indent<S: AsRef<str>>(line: S) -> String {
 enum ErrorType {
     Io,
     Anyhow,
+    AnyhowContext,
     ThisError,
 }
 
 impl ErrorType {
     fn all() -> Vec<ErrorType> {
-        vec![ErrorType::Io, ErrorType::Anyhow, ErrorType::ThisError]
+        vec![
+            ErrorType::Io,
+            ErrorType::Anyhow,
+            ErrorType::AnyhowContext,
+            ErrorType::ThisError,
+        ]
     }
 
     fn full_type_path(&self) -> &str {
         match self {
             ErrorType::Io => "std::io::Error",
             ErrorType::Anyhow => "anyhow::Error",
+            ErrorType::AnyhowContext => "anyhow::Error",
             ErrorType::ThisError => "CustomError",
         }
     }
@@ -50,6 +57,7 @@ impl ErrorType {
         match self {
             ErrorType::Io => "io",
             ErrorType::Anyhow => "anyhow",
+            ErrorType::AnyhowContext => "anyhow_context",
             ErrorType::ThisError => "thiserror",
         }
     }
@@ -99,14 +107,17 @@ impl Operation {
 fn gen_program(error_type: ErrorType, operation: Operation) -> Program {
     let mut program = Program::default();
 
-    if error_type == ErrorType::ThisError {
+    if error_type == ErrorType::AnyhowContext {
+        program.add_line("use anyhow::Context;");
+        program.add_empty();
+    } else if error_type == ErrorType::ThisError {
         program.add_line("#[derive(Debug, thiserror::Error)]");
         program.add_line("enum CustomError {");
         program.add_line(indent("#[error(\"bad thing: {0}\")]"));
         program.add_line(indent("BadThing(#[from] std::io::Error)"));
         program.add_line("}");
+        program.add_empty();
     }
-    program.add_empty();
 
     // Add make_error function
     program.add_line(format!(
@@ -118,6 +129,9 @@ fn gen_program(error_type: ErrorType, operation: Operation) -> Program {
     program.add_line(indent(match error_type {
         ErrorType::Io => io_error,
         ErrorType::Anyhow => format!("Ok({}?)", io_error),
+        ErrorType::AnyhowContext => {
+            format!("Ok({}.context(\"oh no\")?)", io_error)
+        }
         ErrorType::ThisError => format!("Ok({}?)", io_error),
     }));
     program.add_line("}");

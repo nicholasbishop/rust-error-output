@@ -19,12 +19,12 @@ h2 {
     position: fixed;
     top: 0;
     left: 0;
-    width: 10rem;
+    width: 12rem;
 }
 
 #content {
-    margin-left: 10rem;
-    margin-right: 10rem;
+    margin-left: 12rem;
+    margin-right: 12rem;
     /* max-width: 64rem; */
     /* margin: 0 auto; */
 }
