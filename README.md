@@ -6,4 +6,4 @@ print if something goes wrong?".
 
 Rendered view: https://nicholasbishop.github.io/rust-error-output
 
-To build locally, run `make`.
+To build locally, run `cargo run`.
