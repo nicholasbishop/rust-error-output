@@ -192,11 +192,7 @@ struct SourceAndOutput {
 }
 
 impl SourceAndOutput {
-    fn new(
-        error_type: ErrorType,
-        operation: Operation,
-    ) -> Result<SourceAndOutput, Error> {
-        let path = get_source_path(error_type, operation);
+    fn new(path: &Path) -> Result<SourceAndOutput, Error> {
         let src = fs::read_to_string(path)?;
         let initial;
         let rest;
@@ -207,7 +203,7 @@ impl SourceAndOutput {
             return Err(anyhow!("missing fn main"));
         }
 
-        let file_name = get_source_file_name(error_type, operation);
+        let file_name = path.file_name().unwrap().to_str().unwrap();
         let mut cmd =
             Command::new(Path::new(".").join(file_name.replace(".rs", "")));
         cmd.set_dir("gen/target/debug");
@@ -256,14 +252,15 @@ impl SourceAndOutput {
 }
 
 fn gen_nav() -> String {
+    fn link(text: &str, target: &str) -> String {
+        format!("<li><a href=\"{}.html\">{}</a></li>", target, text)
+    }
+
     let mut nav = "<ul>".to_string();
     for error_type in ErrorType::all() {
-        nav += &format!(
-            "<li><a href=\"{}.html\">{}</a></li>",
-            error_type.short_name(),
-            error_type.as_title(),
-        );
+        nav += &link(error_type.as_title(), error_type.short_name());
     }
+    nav += &link("panic", "panic");
     nav += "</ul>";
     nav
 }
@@ -271,9 +268,17 @@ fn gen_nav() -> String {
 #[derive(Template)]
 #[template(path = "error.html", escape = "none")]
 struct ErrorTemplate {
-    error_type: ErrorType,
+    error_name: String,
     nav: String,
     content: String,
+}
+
+impl ErrorTemplate {
+    fn write(&self, name: &str) -> Result<(), Error> {
+        let path = Path::new("docs").join(format!("{}.html", name));
+        fs::write(path, self.render()?)?;
+        Ok(())
+    }
 }
 
 fn main() -> Result<(), anyhow::Error> {
@@ -286,6 +291,14 @@ fn main() -> Result<(), anyhow::Error> {
         }
     }
 
+    let panic_path = Path::new("gen/src/bin/panic.rs");
+    fs::write(
+        panic_path,
+        "fn main() {
+    panic!(\"oh no\");
+}",
+    )?;
+
     Command::new("cargo").set_dir("gen").add_arg("fmt").run()?;
     Command::new("cargo")
         .set_dir("gen")
@@ -297,7 +310,8 @@ fn main() -> Result<(), anyhow::Error> {
     for error_type in ErrorType::all() {
         let mut content = String::new();
         for (index, operation) in Operation::all().iter().enumerate() {
-            let output = SourceAndOutput::new(error_type, *operation)?;
+            let path = get_source_path(error_type, *operation);
+            let output = SourceAndOutput::new(&path)?;
 
             if index == 0 {
                 content += &format!(
@@ -312,15 +326,23 @@ fn main() -> Result<(), anyhow::Error> {
             content += &output.output;
         }
 
-        let template = ErrorTemplate {
+        ErrorTemplate {
             nav: nav.clone(),
-            error_type,
+            error_name: error_type.short_name().into(),
             content,
-        };
-        let path =
-            Path::new("docs").join(format!("{}.html", error_type.short_name()));
-        fs::write(path, template.render()?)?;
+        }
+        .write(error_type.short_name())?;
     }
+
+    // Create panic example
+    let output = SourceAndOutput::new(panic_path)?;
+    let content = format!("<h2>Panic</h2>{}{}", output.rest, output.output);
+    ErrorTemplate {
+        nav,
+        error_name: "panic".into(),
+        content,
+    }
+    .write("panic")?;
 
     Ok(())
 }
