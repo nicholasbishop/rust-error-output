@@ -208,9 +208,9 @@ impl SourceAndOutput {
         }
 
         let file_name = get_source_file_name(error_type, operation);
-        let mut cmd = Command::new(
-            Path::new("gen/target/debug").join(file_name.replace(".rs", "")),
-        );
+        let mut cmd =
+            Command::new(Path::new(".").join(file_name.replace(".rs", "")));
+        cmd.set_dir("gen/target/debug");
         cmd.check = false;
         cmd.capture = true;
         cmd.log_command = false;
@@ -300,7 +300,10 @@ fn main() -> Result<(), anyhow::Error> {
             let output = SourceAndOutput::new(error_type, *operation)?;
 
             if index == 0 {
-                content += "<h2>Setup code</h2>";
+                content += &format!(
+                    "<h2>Setup code for {}</h2>",
+                    error_type.as_title()
+                );
                 content += &output.initial;
             }
 

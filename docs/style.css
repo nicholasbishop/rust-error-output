@@ -13,6 +13,22 @@ body {
 
 h2 {
     color: #159957;
+    font-weight: normal;
+	margin-top: 2rem;
+	margin-bottom: 1rem;
+}
+
+a {
+    color: #1e6bb8;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+a:active, a:hover {
+    outline: 0;
 }
 
 #nav {
