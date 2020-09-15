@@ -31,6 +31,7 @@ enum ErrorType {
     Io,
     Anyhow,
     AnyhowContext,
+    AnyhowContext2x,
     ThisError,
 }
 
@@ -40,6 +41,7 @@ impl ErrorType {
             ErrorType::Io,
             ErrorType::Anyhow,
             ErrorType::AnyhowContext,
+            ErrorType::AnyhowContext2x,
             ErrorType::ThisError,
         ]
     }
@@ -47,8 +49,9 @@ impl ErrorType {
     fn full_type_path(&self) -> &str {
         match self {
             ErrorType::Io => "std::io::Error",
-            ErrorType::Anyhow => "anyhow::Error",
-            ErrorType::AnyhowContext => "anyhow::Error",
+            ErrorType::Anyhow
+            | ErrorType::AnyhowContext
+            | ErrorType::AnyhowContext2x => "anyhow::Error",
             ErrorType::ThisError => "CustomError",
         }
     }
@@ -58,6 +61,7 @@ impl ErrorType {
             ErrorType::Io => "io",
             ErrorType::Anyhow => "anyhow",
             ErrorType::AnyhowContext => "anyhow_context",
+            ErrorType::AnyhowContext2x => "anyhow_context_2x",
             ErrorType::ThisError => "thiserror",
         }
     }
@@ -67,6 +71,7 @@ impl ErrorType {
             ErrorType::Io => "std::io::Error",
             ErrorType::Anyhow => "anyhow",
             ErrorType::AnyhowContext => "anyhow with context",
+            ErrorType::AnyhowContext2x => "anyhow with context 2x",
             ErrorType::ThisError => "thiserror",
         }
     }
@@ -116,7 +121,10 @@ impl Operation {
 fn gen_program(error_type: ErrorType, operation: Operation) -> Program {
     let mut program = Program::default();
 
-    if error_type == ErrorType::AnyhowContext {
+    if matches!(
+        error_type,
+        ErrorType::AnyhowContext | ErrorType::AnyhowContext2x
+    ) {
         program.add_line("use anyhow::Context;");
         program.add_empty();
     } else if error_type == ErrorType::ThisError {
@@ -141,6 +149,10 @@ fn gen_program(error_type: ErrorType, operation: Operation) -> Program {
         ErrorType::AnyhowContext => {
             format!("Ok({}.context(\"oh no\")?)", io_error)
         }
+        ErrorType::AnyhowContext2x => format!(
+            "Ok({}.context(\"oh no\").context(\"second context\")?)",
+            io_error
+        ),
         ErrorType::ThisError => format!("Ok({}?)", io_error),
     }));
     program.add_line("}");
