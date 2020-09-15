@@ -1,0 +1,19 @@
+h2 {
+    font-family: sans-serif;
+}
+
+#content {
+    max-width: 64rem;
+    margin: 0 auto;
+}
+
+pre {
+    background-color: rgb(243, 246, 250);
+    border: solid 1px;
+    border-color: rgb(220, 230, 240);
+    border-radius: 0.3rem;
+    font-size: 0.9rem;
+    line-height: 1.45;
+    padding: 0.8rem;
+    overflow: auto;
+}

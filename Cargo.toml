@@ -9,3 +9,4 @@ publish = false
 anyhow = "1.0"
 askama = "0.10"
 command-run = "0.13"
+syntect = "4.4"

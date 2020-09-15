@@ -3,6 +3,9 @@ use askama::Template;
 use command_run::Command;
 use std::fs;
 use std::path::{Path, PathBuf};
+use syntect::highlighting::{Color, ThemeSet};
+use syntect::html::highlighted_html_for_string;
+use syntect::parsing::SyntaxSet;
 
 #[derive(Default)]
 struct Program {
@@ -79,6 +82,16 @@ impl Operation {
             Operation::Unwrap => "unwrap",
             Operation::Expect => "expect",
             Operation::Return => "return",
+        }
+    }
+
+    fn as_title(&self) -> &str {
+        match self {
+            Operation::Debug => "Debug",
+            Operation::Display => "Display",
+            Operation::Unwrap => "Unwrap",
+            Operation::Expect => "Expect",
+            Operation::Return => "Return",
         }
     }
 }
@@ -171,19 +184,60 @@ impl SourceAndOutput {
             panic!("unexpected stdout from {}", file_name);
         }
 
+        let ss = SyntaxSet::load_defaults_newlines();
+        let ts = ThemeSet::load_defaults();
+        let mut theme = ts.themes["InspiredGitHub"].clone();
+
+        theme.settings.background = Some(Color {
+            r: 243,
+            g: 246,
+            b: 250,
+            a: 255,
+        });
+
+        let initial = highlighted_html_for_string(
+            initial,
+            &ss,
+            ss.find_syntax_by_extension("rs").unwrap(),
+            &theme,
+        );
+
+        let rest = highlighted_html_for_string(
+            rest,
+            &ss,
+            ss.find_syntax_by_extension("rs").unwrap(),
+            &theme,
+        );
+
+        let stderr = cmdout.stderr_string_lossy();
+        let output = format!("<pre>{}</pre>", stderr);
+
         Ok(SourceAndOutput {
-            initial: initial.into(),
-            rest: rest.into(),
-            output: cmdout.stderr_string_lossy().into(),
+            initial,
+            rest,
+            output,
         })
     }
 }
 
+fn gen_nav() -> String {
+    let mut nav = "<ul>".to_string();
+    for error_type in ErrorType::all() {
+        nav += &format!(
+            "<li><a href=\"{0}.html\">{0}</a></li>",
+            error_type.short_name()
+        );
+    }
+    nav += "</ul>";
+    nav
+}
+
 #[derive(Template)]
-#[template(path = "error.html")]
+#[template(path = "error.html", escape = "none")]
 struct ErrorTemplate {
     error_type: ErrorType,
-    unwrap: SourceAndOutput,
+    nav: String,
+    content: String,
 }
 
 fn main() -> Result<(), anyhow::Error> {
@@ -202,10 +256,27 @@ fn main() -> Result<(), anyhow::Error> {
         .add_arg("build")
         .run()?;
 
+    let nav = gen_nav();
+
     for error_type in ErrorType::all() {
+        let mut content = String::new();
+        for (index, operation) in Operation::all().iter().enumerate() {
+            let output = SourceAndOutput::new(error_type, *operation)?;
+
+            if index == 0 {
+                content += "<h2>Setup code</h2>";
+                content += &output.initial;
+            }
+
+            content += &format!("<h2>{}</h2>", operation.as_title());
+            content += &output.rest;
+            content += &output.output;
+        }
+
         let template = ErrorTemplate {
+            nav: nav.clone(),
             error_type,
-            unwrap: SourceAndOutput::new(error_type, Operation::Unwrap)?,
+            content,
         };
         let path =
             Path::new("docs").join(format!("{}.html", error_type.short_name()));
