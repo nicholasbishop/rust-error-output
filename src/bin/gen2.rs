@@ -1,6 +1,8 @@
+use anyhow::{anyhow, Error};
+use askama::Template;
 use command_run::Command;
 use std::fs;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 #[derive(Default)]
 struct Program {
@@ -127,14 +129,70 @@ fn gen_program(error_type: ErrorType, operation: Operation) -> Program {
     program
 }
 
+fn get_source_file_name(error_type: ErrorType, operation: Operation) -> String {
+    format!("{}_{}.rs", error_type.short_name(), operation.as_str())
+}
+
+fn get_source_path(error_type: ErrorType, operation: Operation) -> PathBuf {
+    Path::new("gen/src/bin").join(get_source_file_name(error_type, operation))
+}
+
+struct SourceAndOutput {
+    initial: String,
+    rest: String,
+    output: String,
+}
+
+impl SourceAndOutput {
+    fn new(
+        error_type: ErrorType,
+        operation: Operation,
+    ) -> Result<SourceAndOutput, Error> {
+        let path = get_source_path(error_type, operation);
+        let src = fs::read_to_string(path)?;
+        let initial;
+        let rest;
+        if let Some(index) = src.find("fn main") {
+            initial = &src[..index];
+            rest = &src[index..];
+        } else {
+            return Err(anyhow!("missing fn main"));
+        }
+
+        let file_name = get_source_file_name(error_type, operation);
+        let mut cmd = Command::new(
+            Path::new("gen/target/debug").join(file_name.replace(".rs", "")),
+        );
+        cmd.check = false;
+        cmd.capture = true;
+        cmd.log_command = false;
+        let cmdout = cmd.run().unwrap();
+        if !cmdout.stdout.is_empty() {
+            panic!("unexpected stdout from {}", file_name);
+        }
+
+        Ok(SourceAndOutput {
+            initial: initial.into(),
+            rest: rest.into(),
+            output: cmdout.stderr_string_lossy().into(),
+        })
+    }
+}
+
+#[derive(Template)]
+#[template(path = "error.html")]
+struct ErrorTemplate {
+    error_type: ErrorType,
+    unwrap: SourceAndOutput,
+}
+
 fn main() -> Result<(), anyhow::Error> {
     for err_type in ErrorType::all() {
         for operation in Operation::all() {
             let prog = gen_program(err_type, operation);
-            let file_name =
-                format!("{}_{}.rs", err_type.short_name(), operation.as_str());
+            let path = get_source_path(err_type, operation);
             let contents = prog.lines.join("\n");
-            fs::write(Path::new("gen/src/bin").join(file_name), contents)?;
+            fs::write(path, contents)?;
         }
     }
 
@@ -143,6 +201,16 @@ fn main() -> Result<(), anyhow::Error> {
         .set_dir("gen")
         .add_arg("build")
         .run()?;
+
+    for error_type in ErrorType::all() {
+        let template = ErrorTemplate {
+            error_type,
+            unwrap: SourceAndOutput::new(error_type, Operation::Unwrap)?,
+        };
+        let path =
+            Path::new("docs").join(format!("{}.html", error_type.short_name()));
+        fs::write(path, template.render()?)?;
+    }
 
     Ok(())
 }
