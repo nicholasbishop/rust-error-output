@@ -61,6 +61,15 @@ impl ErrorType {
             ErrorType::ThisError => "thiserror",
         }
     }
+
+    fn as_title(&self) -> &str {
+        match self {
+            ErrorType::Io => "std::io::Error",
+            ErrorType::Anyhow => "anyhow",
+            ErrorType::AnyhowContext => "anyhow with context",
+            ErrorType::ThisError => "thiserror",
+        }
+    }
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -238,8 +247,9 @@ fn gen_nav() -> String {
     let mut nav = "<ul>".to_string();
     for error_type in ErrorType::all() {
         nav += &format!(
-            "<li><a href=\"{0}.html\">{0}</a></li>",
-            error_type.short_name()
+            "<li><a href=\"{}.html\">{}</a></li>",
+            error_type.short_name(),
+            error_type.as_title(),
         );
     }
     nav += "</ul>";
