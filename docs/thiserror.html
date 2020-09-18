@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>thiserror | Rust Error Output</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <div id="header">
+      <h1>Rust Error Output</h1>
+    </div>
+    <div id="nav">
+      <div id="nav-inner">
+        <ul><li><a href="io.html">std::io::Error</a></li><li><a href="anyhow.html">anyhow</a></li><li><a href="anyhow_context.html">anyhow with context</a></li><li><a href="anyhow_context_2x.html">anyhow with context 2x</a></li><li><a href="thiserror.html">thiserror</a></li><li><a href="panic.html">panic</a></li></ul>
+      </div>
+    </div>
+    <div id="content">
+      <p>This is a reference to help answer this question: “what will
+      my Rust program print if something goes wrong?”</p>
+
+      <p>All output in these examples goes to stderr, nothing goes to
+      stdout.</p>
+
+      <h2>Setup code for thiserror</h2><pre style="background-color:#f3f6fa;">
+<span style="color:#323232;">#[derive(Debug, thiserror::Error)]
+</span><span style="font-weight:bold;color:#a71d5d;">enum </span><span style="color:#323232;">CustomError {
+</span><span style="color:#323232;">    #[error(</span><span style="color:#183691;">&quot;bad thing: {0}&quot;</span><span style="color:#323232;">)]
+</span><span style="color:#323232;">    BadThing(#[from] std::io::Error),
+</span><span style="color:#323232;">}
+</span><span style="color:#323232;">
+</span><span style="font-weight:bold;color:#a71d5d;">fn </span><span style="font-weight:bold;color:#795da3;">make_error</span><span style="color:#323232;">() -&gt; Result&lt;(), CustomError&gt; {
+</span><span style="color:#323232;">    </span><span style="color:#0086b3;">Ok</span><span style="color:#323232;">(std::fs::remove_file(</span><span style="color:#183691;">&quot;/this/file/does/not/exist&quot;</span><span style="color:#323232;">)</span><span style="font-weight:bold;color:#a71d5d;">?</span><span style="color:#323232;">)
+</span><span style="color:#323232;">}
+</span><span style="color:#323232;">
+</span></pre>
+<h2>Debug</h2><pre style="background-color:#f3f6fa;">
+<span style="font-weight:bold;color:#a71d5d;">fn </span><span style="font-weight:bold;color:#795da3;">main</span><span style="color:#323232;">() {
+</span><span style="color:#323232;">    eprintln!(</span><span style="color:#183691;">&quot;{:?}&quot;</span><span style="color:#323232;">, </span><span style="color:#62a35c;">make_error</span><span style="color:#323232;">().</span><span style="color:#62a35c;">unwrap_err</span><span style="color:#323232;">())
+</span><span style="color:#323232;">}
+</span></pre>
+<pre>BadThing(Os { code: 2, kind: NotFound, message: "No such file or directory" })
+</pre><h2>Display</h2><pre style="background-color:#f3f6fa;">
+<span style="font-weight:bold;color:#a71d5d;">fn </span><span style="font-weight:bold;color:#795da3;">main</span><span style="color:#323232;">() {
+</span><span style="color:#323232;">    eprintln!(</span><span style="color:#183691;">&quot;{}&quot;</span><span style="color:#323232;">, </span><span style="color:#62a35c;">make_error</span><span style="color:#323232;">().</span><span style="color:#62a35c;">unwrap_err</span><span style="color:#323232;">())
+</span><span style="color:#323232;">}
+</span></pre>
+<pre>bad thing: No such file or directory (os error 2)
+</pre><h2>Unwrap</h2><pre style="background-color:#f3f6fa;">
+<span style="font-weight:bold;color:#a71d5d;">fn </span><span style="font-weight:bold;color:#795da3;">main</span><span style="color:#323232;">() {
+</span><span style="color:#323232;">    </span><span style="color:#62a35c;">make_error</span><span style="color:#323232;">().</span><span style="color:#62a35c;">unwrap</span><span style="color:#323232;">();
+</span><span style="color:#323232;">}
+</span></pre>
+<pre>thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: BadThing(Os { code: 2, kind: NotFound, message: "No such file or directory" })', src/bin/thiserror_unwrap.rs:12:18
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+</pre><h2>Expect</h2><pre style="background-color:#f3f6fa;">
+<span style="font-weight:bold;color:#a71d5d;">fn </span><span style="font-weight:bold;color:#795da3;">main</span><span style="color:#323232;">() {
+</span><span style="color:#323232;">    </span><span style="color:#62a35c;">make_error</span><span style="color:#323232;">().</span><span style="color:#62a35c;">expect</span><span style="color:#323232;">(</span><span style="color:#183691;">&quot;oh no&quot;</span><span style="color:#323232;">);
+</span><span style="color:#323232;">}
+</span></pre>
+<pre>thread 'main' panicked at 'oh no: BadThing(Os { code: 2, kind: NotFound, message: "No such file or directory" })', src/bin/thiserror_expect.rs:12:18
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+</pre><h2>Return</h2><pre style="background-color:#f3f6fa;">
+<span style="font-weight:bold;color:#a71d5d;">fn </span><span style="font-weight:bold;color:#795da3;">main</span><span style="color:#323232;">() -&gt; Result&lt;(), CustomError&gt; {
+</span><span style="color:#323232;">    </span><span style="color:#62a35c;">make_error</span><span style="color:#323232;">()
+</span><span style="color:#323232;">}
+</span></pre>
+<pre>Error: BadThing(Os { code: 2, kind: NotFound, message: "No such file or directory" })
+</pre>
+    </div>
+  </body>
+</html>

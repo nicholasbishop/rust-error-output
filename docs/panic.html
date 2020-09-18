@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>panic | Rust Error Output</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <div id="header">
+      <h1>Rust Error Output</h1>
+    </div>
+    <div id="nav">
+      <div id="nav-inner">
+        <ul><li><a href="io.html">std::io::Error</a></li><li><a href="anyhow.html">anyhow</a></li><li><a href="anyhow_context.html">anyhow with context</a></li><li><a href="anyhow_context_2x.html">anyhow with context 2x</a></li><li><a href="thiserror.html">thiserror</a></li><li><a href="panic.html">panic</a></li></ul>
+      </div>
+    </div>
+    <div id="content">
+      <p>This is a reference to help answer this question: “what will
+      my Rust program print if something goes wrong?”</p>
+
+      <p>All output in these examples goes to stderr, nothing goes to
+      stdout.</p>
+
+      <h2>Panic</h2><pre style="background-color:#f3f6fa;">
+<span style="font-weight:bold;color:#a71d5d;">fn </span><span style="font-weight:bold;color:#795da3;">main</span><span style="color:#323232;">() {
+</span><span style="color:#323232;">    panic!(</span><span style="color:#183691;">&quot;oh no&quot;</span><span style="color:#323232;">);
+</span><span style="color:#323232;">}
+</span></pre>
+<pre>thread 'main' panicked at 'oh no', src/bin/panic.rs:2:5
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+</pre>
+    </div>
+  </body>
+</html>

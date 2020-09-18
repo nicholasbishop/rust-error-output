@@ -2,4 +2,3 @@
 /gen/target
 /gen/Cargo.lock
 /gen/src/bin/*.rs
-/docs/*.html
