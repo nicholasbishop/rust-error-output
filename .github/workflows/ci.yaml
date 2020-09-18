@@ -81,4 +81,4 @@ jobs:
           command: run
           args: --bin render
       - run: |
-          git diff --exit-code docs/index.md
+          git diff --exit-code docs/
