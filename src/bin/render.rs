@@ -1,8 +1,8 @@
 use anyhow::{anyhow, Error};
 use askama::Template;
 use command_run::Command;
-use std::fs;
 use std::path::{Path, PathBuf};
+use std::{env, fs};
 use syntect::highlighting::{Color, ThemeSet};
 use syntect::html::highlighted_html_for_string;
 use syntect::parsing::SyntaxSet;
@@ -208,6 +208,22 @@ fn get_source_path(error_type: ErrorType, operation: Operation) -> PathBuf {
     Path::new("gen/src/bin").join(get_source_file_name(error_type, operation))
 }
 
+/// Normalize eyre backtrace output. This makes the output match the
+/// github CI.
+fn normalize_backtrace_paths(stderr: String) -> String {
+    let runner_home = "/home/runner";
+
+    // First normalize the source paths
+    let stderr = stderr.replace(
+        env!("CARGO_MANIFEST_DIR"),
+        &(runner_home.to_owned() + "/work/rust-error-output/rust-error-output"),
+    );
+
+    // Then normalize the cargo paths
+    let home = env::var("HOME").expect("HOME is not set");
+    stderr.replace(&home, runner_home)
+}
+
 struct SourceAndOutput {
     initial: String,
     rest: String,
@@ -237,6 +253,9 @@ impl SourceAndOutput {
         if !cmdout.stdout.is_empty() {
             panic!("unexpected stdout from {}", file_name);
         }
+        let stderr = cmdout.stderr_string_lossy();
+
+        let stderr = normalize_backtrace_paths(stderr.into());
 
         let ss = SyntaxSet::load_defaults_newlines();
         let ts = ThemeSet::load_defaults();
@@ -263,7 +282,6 @@ impl SourceAndOutput {
             &theme,
         );
 
-        let stderr = cmdout.stderr_string_lossy();
         let output = format!("<pre>{}</pre>", stderr);
 
         Ok(SourceAndOutput {
