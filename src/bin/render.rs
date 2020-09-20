@@ -306,12 +306,31 @@ fn gen_nav() -> String {
     nav
 }
 
+fn get_rust_version() -> Result<String, Error> {
+    let mut cmd = Command::new("rustc");
+    cmd.add_arg("--version");
+    cmd.capture = true;
+    cmd.log_command = false;
+    let out = cmd.run()?;
+
+    // Output looks like this: "cargo 1.46.0 (149022b1d 2020-07-17)"
+    let full = out.stdout_string_lossy();
+
+    // Return the middle part, e.g. "1.46.0"
+    if let Some(version) = full.split_whitespace().nth(1) {
+        Ok(version.into())
+    } else {
+        Err(anyhow!("invalid version output"))
+    }
+}
+
 #[derive(Template)]
 #[template(path = "error.html", escape = "none")]
 struct ErrorTemplate {
     error_name: String,
     nav: String,
     content: String,
+    version: String,
 }
 
 impl ErrorTemplate {
@@ -322,7 +341,9 @@ impl ErrorTemplate {
     }
 }
 
-fn main() -> Result<(), anyhow::Error> {
+fn main() -> Result<(), Error> {
+    let version = get_rust_version()?;
+
     for err_type in ErrorType::all() {
         for operation in Operation::all() {
             let prog = gen_program(err_type, operation);
@@ -371,6 +392,7 @@ fn main() -> Result<(), anyhow::Error> {
             nav: nav.clone(),
             error_name: error_type.short_name().into(),
             content,
+            version: version.clone(),
         }
         .write(error_type.short_name())?;
     }
@@ -382,6 +404,7 @@ fn main() -> Result<(), anyhow::Error> {
         nav,
         error_name: "panic".into(),
         content,
+        version,
     }
     .write("panic")?;
 
