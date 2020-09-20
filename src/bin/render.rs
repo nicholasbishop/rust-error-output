@@ -32,6 +32,7 @@ enum ErrorType {
     Anyhow,
     AnyhowContext,
     AnyhowContext2x,
+    StableEyre,
     ThisError,
 }
 
@@ -42,6 +43,7 @@ impl ErrorType {
             ErrorType::Anyhow,
             ErrorType::AnyhowContext,
             ErrorType::AnyhowContext2x,
+            ErrorType::StableEyre,
             ErrorType::ThisError,
         ]
     }
@@ -52,6 +54,7 @@ impl ErrorType {
             ErrorType::Anyhow
             | ErrorType::AnyhowContext
             | ErrorType::AnyhowContext2x => "anyhow::Error",
+            ErrorType::StableEyre => "stable_eyre::eyre::Report",
             ErrorType::ThisError => "CustomError",
         }
     }
@@ -62,6 +65,7 @@ impl ErrorType {
             ErrorType::Anyhow => "anyhow",
             ErrorType::AnyhowContext => "anyhow_context",
             ErrorType::AnyhowContext2x => "anyhow_context_2x",
+            ErrorType::StableEyre => "stable_eyre",
             ErrorType::ThisError => "thiserror",
         }
     }
@@ -72,6 +76,7 @@ impl ErrorType {
             ErrorType::Anyhow => "anyhow",
             ErrorType::AnyhowContext => "anyhow with context",
             ErrorType::AnyhowContext2x => "anyhow with context 2x",
+            ErrorType::StableEyre => "stable_eyre",
             ErrorType::ThisError => "thiserror",
         }
     }
@@ -145,7 +150,6 @@ fn gen_program(error_type: ErrorType, operation: Operation) -> Program {
     let io_error = format!("std::fs::remove_file(\"{}\")", bad_path);
     program.add_line(indent(match error_type {
         ErrorType::Io => io_error,
-        ErrorType::Anyhow => format!("Ok({}?)", io_error),
         ErrorType::AnyhowContext => {
             format!("Ok({}.context(\"oh no\")?)", io_error)
         }
@@ -153,10 +157,23 @@ fn gen_program(error_type: ErrorType, operation: Operation) -> Program {
             "Ok({}.context(\"oh no\").context(\"second context\")?)",
             io_error
         ),
-        ErrorType::ThisError => format!("Ok({}?)", io_error),
+        ErrorType::Anyhow | ErrorType::StableEyre | ErrorType::ThisError => {
+            format!("Ok({}?)", io_error)
+        }
     }));
     program.add_line("}");
     program.add_empty();
+
+    // Add install_hook function
+    if error_type == ErrorType::StableEyre {
+        program.add_line(
+            "fn install_hook() -> stable_eyre::eyre::Result<()> {
+            let hook = stable_eyre::HookBuilder::default()
+                 .capture_backtrace_by_default(true);
+            hook.install()
+        }",
+        );
+    }
 
     if operation == Operation::Return {
         program.add_line(format!(
@@ -166,6 +183,16 @@ fn gen_program(error_type: ErrorType, operation: Operation) -> Program {
     } else {
         program.add_line("fn main() {");
     }
+
+    if error_type == ErrorType::StableEyre {
+        let handle_err = if operation == Operation::Return {
+            "?"
+        } else {
+            ".unwrap()"
+        };
+        program.add_line(indent(format!("install_hook(){};", handle_err)));
+    }
+
     program.add_line(indent(match operation {
         Operation::Debug => "eprintln!(\"{:?}\", make_error().unwrap_err())",
         Operation::Display => "eprintln!(\"{}\", make_error().unwrap_err())",

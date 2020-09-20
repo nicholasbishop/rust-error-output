@@ -5,4 +5,5 @@ edition = "2018"
 
 [dependencies]
 anyhow = "1.0"
+stable-eyre = "0.2"
 thiserror = "1.0"
