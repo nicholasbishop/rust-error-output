@@ -3,9 +3,9 @@ use askama::Template;
 use command_run::Command;
 use std::path::{Path, PathBuf};
 use std::{env, fs};
-use syntect::highlighting::{Color, ThemeSet};
+use syntect::highlighting::{Color, Theme, ThemeSet};
 use syntect::html::highlighted_html_for_string;
-use syntect::parsing::SyntaxSet;
+use syntect::parsing::{SyntaxReference, SyntaxSet};
 
 #[derive(Default)]
 struct Program {
@@ -224,6 +224,36 @@ fn normalize_backtrace_paths(stderr: String) -> String {
     stderr.replace(&home, runner_home)
 }
 
+struct Highlighter {
+    ss: SyntaxSet,
+    // TODO
+    syntax: SyntaxReference,
+    theme: Theme,
+}
+
+impl Highlighter {
+    fn new() -> Highlighter {
+        let ss = SyntaxSet::load_defaults_newlines();
+        let ts = ThemeSet::load_defaults();
+        let mut theme = ts.themes["InspiredGitHub"].clone();
+
+        theme.settings.background = Some(Color {
+            r: 243,
+            g: 246,
+            b: 250,
+            a: 255,
+        });
+
+        let syntax = ss.find_syntax_by_extension("rs").unwrap().clone();
+
+        Highlighter { ss, syntax, theme }
+    }
+
+    fn highlight(&self, code: &str) -> String {
+        highlighted_html_for_string(code, &self.ss, &self.syntax, &self.theme)
+    }
+}
+
 struct SourceAndOutput {
     initial: String,
     rest: String,
@@ -257,30 +287,11 @@ impl SourceAndOutput {
 
         let stderr = normalize_backtrace_paths(stderr.into());
 
-        let ss = SyntaxSet::load_defaults_newlines();
-        let ts = ThemeSet::load_defaults();
-        let mut theme = ts.themes["InspiredGitHub"].clone();
+        // TODO: move this up
+        let highlighter = Highlighter::new();
 
-        theme.settings.background = Some(Color {
-            r: 243,
-            g: 246,
-            b: 250,
-            a: 255,
-        });
-
-        let initial = highlighted_html_for_string(
-            initial,
-            &ss,
-            ss.find_syntax_by_extension("rs").unwrap(),
-            &theme,
-        );
-
-        let rest = highlighted_html_for_string(
-            rest,
-            &ss,
-            ss.find_syntax_by_extension("rs").unwrap(),
-            &theme,
-        );
+        let initial = highlighter.highlight(initial);
+        let rest = highlighter.highlight(rest);
 
         let output = format!("<pre>{}</pre>", stderr);
 
@@ -349,6 +360,28 @@ impl ErrorTemplate {
     }
 }
 
+fn add_panic_example(rust_version: &str) -> Result<(), Error> {
+    let panic_path = Path::new("gen/src/bin/panic.rs");
+    fs::write(
+        panic_path,
+        "fn main() {
+    panic!(\"oh no\");
+}",
+    )?;
+
+    let output = SourceAndOutput::new(panic_path)?;
+    let content = format!("<h2>Panic</h2>{}{}", output.rest, output.output);
+    ErrorTemplate {
+        nav: gen_nav("panic"),
+        error_name: "panic".into(),
+        content,
+        version: rust_version.into(),
+    }
+    .write("panic")?;
+
+    Ok(())
+}
+
 fn main() -> Result<(), Error> {
     let version = get_rust_version()?;
 
@@ -360,14 +393,6 @@ fn main() -> Result<(), Error> {
             fs::write(path, contents)?;
         }
     }
-
-    let panic_path = Path::new("gen/src/bin/panic.rs");
-    fs::write(
-        panic_path,
-        "fn main() {
-    panic!(\"oh no\");
-}",
-    )?;
 
     Command::new("cargo").set_dir("gen").add_arg("fmt").run()?;
     Command::new("cargo")
@@ -403,16 +428,7 @@ fn main() -> Result<(), Error> {
         .write(error_type.short_name())?;
     }
 
-    // Create panic example
-    let output = SourceAndOutput::new(panic_path)?;
-    let content = format!("<h2>Panic</h2>{}{}", output.rest, output.output);
-    ErrorTemplate {
-        nav: gen_nav("panic"),
-        error_name: "panic".into(),
-        content,
-        version,
-    }
-    .write("panic")?;
+    add_panic_example(&version)?;
 
     Ok(())
 }
