@@ -261,7 +261,10 @@ struct SourceAndOutput {
 }
 
 impl SourceAndOutput {
-    fn new(path: &Path) -> Result<SourceAndOutput, Error> {
+    fn new(
+        path: &Path,
+        highlighter: &Highlighter,
+    ) -> Result<SourceAndOutput, Error> {
         let src = fs::read_to_string(path)?;
         let initial;
         let rest;
@@ -286,9 +289,6 @@ impl SourceAndOutput {
         let stderr = cmdout.stderr_string_lossy();
 
         let stderr = normalize_backtrace_paths(stderr.into());
-
-        // TODO: move this up
-        let highlighter = Highlighter::new();
 
         let initial = highlighter.highlight(initial);
         let rest = highlighter.highlight(rest);
@@ -360,7 +360,10 @@ impl ErrorTemplate {
     }
 }
 
-fn add_panic_example(rust_version: &str) -> Result<(), Error> {
+fn add_panic_example(
+    rust_version: &str,
+    highlighter: &Highlighter,
+) -> Result<(), Error> {
     let panic_path = Path::new("gen/src/bin/panic.rs");
     fs::write(
         panic_path,
@@ -369,7 +372,7 @@ fn add_panic_example(rust_version: &str) -> Result<(), Error> {
 }",
     )?;
 
-    let output = SourceAndOutput::new(panic_path)?;
+    let output = SourceAndOutput::new(panic_path, highlighter)?;
     let content = format!("<h2>Panic</h2>{}{}", output.rest, output.output);
     ErrorTemplate {
         nav: gen_nav("panic"),
@@ -384,6 +387,7 @@ fn add_panic_example(rust_version: &str) -> Result<(), Error> {
 
 fn main() -> Result<(), Error> {
     let version = get_rust_version()?;
+    let highlighter = Highlighter::new();
 
     for err_type in ErrorType::all() {
         for operation in Operation::all() {
@@ -404,7 +408,7 @@ fn main() -> Result<(), Error> {
         let mut content = String::new();
         for (index, operation) in Operation::all().iter().enumerate() {
             let path = get_source_path(error_type, *operation);
-            let output = SourceAndOutput::new(&path)?;
+            let output = SourceAndOutput::new(&path, &highlighter)?;
 
             if index == 0 {
                 content += &format!(
@@ -428,7 +432,7 @@ fn main() -> Result<(), Error> {
         .write(error_type.short_name())?;
     }
 
-    add_panic_example(&version)?;
+    add_panic_example(&version, &highlighter)?;
 
     Ok(())
 }
