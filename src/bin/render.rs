@@ -292,10 +292,18 @@ impl SourceAndOutput {
     }
 }
 
-fn gen_nav() -> String {
-    fn link(text: &str, target: &str) -> String {
-        format!("<li><a href=\"{}.html\">{}</a></li>", target, text)
-    }
+fn gen_nav(current: &str) -> String {
+    let link = |text: &str, target: &str| -> String {
+        let class = if target == current {
+            "class=\"active\""
+        } else {
+            ""
+        };
+        format!(
+            "<li><a {} href=\"{}.html\">{}</a></li>",
+            class, target, text
+        )
+    };
 
     let mut nav = "<ul>".to_string();
     for error_type in ErrorType::all() {
@@ -367,8 +375,6 @@ fn main() -> Result<(), Error> {
         .add_arg("build")
         .run()?;
 
-    let nav = gen_nav();
-
     for error_type in ErrorType::all() {
         let mut content = String::new();
         for (index, operation) in Operation::all().iter().enumerate() {
@@ -389,7 +395,7 @@ fn main() -> Result<(), Error> {
         }
 
         ErrorTemplate {
-            nav: nav.clone(),
+            nav: gen_nav(error_type.short_name()),
             error_name: error_type.short_name().into(),
             content,
             version: version.clone(),
@@ -401,7 +407,7 @@ fn main() -> Result<(), Error> {
     let output = SourceAndOutput::new(panic_path)?;
     let content = format!("<h2>Panic</h2>{}{}", output.rest, output.output);
     ErrorTemplate {
-        nav,
+        nav: gen_nav("panic"),
         error_name: "panic".into(),
         content,
         version,
