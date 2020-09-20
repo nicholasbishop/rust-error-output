@@ -22,10 +22,6 @@ impl Program {
     }
 }
 
-fn indent<S: AsRef<str>>(line: S) -> String {
-    format!("    {}", line.as_ref())
-}
-
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 enum ErrorType {
     Io,
@@ -135,8 +131,8 @@ fn gen_program(error_type: ErrorType, operation: Operation) -> Program {
     } else if error_type == ErrorType::ThisError {
         program.add_line("#[derive(Debug, thiserror::Error)]");
         program.add_line("enum CustomError {");
-        program.add_line(indent("#[error(\"bad thing: {0}\")]"));
-        program.add_line(indent("BadThing(#[from] std::io::Error)"));
+        program.add_line("#[error(\"bad thing: {0}\")]");
+        program.add_line("BadThing(#[from] std::io::Error)");
         program.add_line("}");
         program.add_empty();
     }
@@ -148,7 +144,7 @@ fn gen_program(error_type: ErrorType, operation: Operation) -> Program {
     ));
     let bad_path = "/this/file/does/not/exist";
     let io_error = format!("std::fs::remove_file(\"{}\")", bad_path);
-    program.add_line(indent(match error_type {
+    program.add_line(match error_type {
         ErrorType::Io => io_error,
         ErrorType::AnyhowContext => {
             format!("Ok({}.context(\"oh no\")?)", io_error)
@@ -160,7 +156,7 @@ fn gen_program(error_type: ErrorType, operation: Operation) -> Program {
         ErrorType::Anyhow | ErrorType::StableEyre | ErrorType::ThisError => {
             format!("Ok({}?)", io_error)
         }
-    }));
+    });
     program.add_line("}");
     program.add_empty();
 
@@ -190,16 +186,16 @@ fn gen_program(error_type: ErrorType, operation: Operation) -> Program {
         } else {
             ".unwrap()"
         };
-        program.add_line(indent(format!("install_hook(){};", handle_err)));
+        program.add_line(format!("install_hook(){};", handle_err));
     }
 
-    program.add_line(indent(match operation {
+    program.add_line(match operation {
         Operation::Debug => "eprintln!(\"{:?}\", make_error().unwrap_err())",
         Operation::Display => "eprintln!(\"{}\", make_error().unwrap_err())",
         Operation::Unwrap => "make_error().unwrap();",
         Operation::Expect => "make_error().expect(\"oh no\");",
         Operation::Return => "make_error()",
-    }));
+    });
     program.add_line("}");
     program
 }
