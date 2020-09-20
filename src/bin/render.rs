@@ -360,10 +360,7 @@ impl ErrorTemplate {
     }
 }
 
-fn add_panic_example(
-    rust_version: &str,
-    highlighter: &Highlighter,
-) -> Result<(), Error> {
+fn write_panic_source() -> Result<PathBuf, Error> {
     let panic_path = Path::new("gen/src/bin/panic.rs");
     fs::write(
         panic_path,
@@ -371,7 +368,14 @@ fn add_panic_example(
     panic!(\"oh no\");
 }",
     )?;
+    Ok(panic_path.into())
+}
 
+fn add_panic_example(
+    panic_path: &Path,
+    rust_version: &str,
+    highlighter: &Highlighter,
+) -> Result<(), Error> {
     let output = SourceAndOutput::new(panic_path, highlighter)?;
     let content = format!("<h2>Panic</h2>{}{}", output.rest, output.output);
     ErrorTemplate {
@@ -397,6 +401,8 @@ fn main() -> Result<(), Error> {
             fs::write(path, contents)?;
         }
     }
+
+    let panic_path = write_panic_source()?;
 
     Command::new("cargo").set_dir("gen").add_arg("fmt").run()?;
     Command::new("cargo")
@@ -432,7 +438,7 @@ fn main() -> Result<(), Error> {
         .write(error_type.short_name())?;
     }
 
-    add_panic_example(&version, &highlighter)?;
+    add_panic_example(&panic_path, &version, &highlighter)?;
 
     Ok(())
 }
