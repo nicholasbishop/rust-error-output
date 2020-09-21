@@ -1,6 +1,7 @@
 use anyhow::{anyhow, Error};
 use askama::Template;
 use command_run::Command;
+use fehler::{throw, throws};
 use std::path::{Path, PathBuf};
 use std::{env, fs};
 use syntect::highlighting::{Color, Theme, ThemeSet};
@@ -261,10 +262,8 @@ struct SourceAndOutput {
 }
 
 impl SourceAndOutput {
-    fn new(
-        path: &Path,
-        highlighter: &Highlighter,
-    ) -> Result<SourceAndOutput, Error> {
+    #[throws]
+    fn new(path: &Path, highlighter: &Highlighter) -> SourceAndOutput {
         let src = fs::read_to_string(path)?;
         let initial;
         let rest;
@@ -272,7 +271,7 @@ impl SourceAndOutput {
             initial = &src[..index];
             rest = &src[index..];
         } else {
-            return Err(anyhow!("missing fn main"));
+            throw!(anyhow!("missing fn main"));
         }
 
         let file_name = path.file_name().unwrap().to_str().unwrap();
@@ -284,7 +283,7 @@ impl SourceAndOutput {
         cmd.log_command = false;
         let cmdout = cmd.run().unwrap();
         if !cmdout.stdout.is_empty() {
-            panic!("unexpected stdout from {}", file_name);
+            throw!(anyhow!("unexpected stdout from {}", file_name));
         }
         let stderr = cmdout.stderr_string_lossy();
 
@@ -295,11 +294,11 @@ impl SourceAndOutput {
 
         let output = format!("<pre>{}</pre>", stderr);
 
-        Ok(SourceAndOutput {
+        SourceAndOutput {
             initial,
             rest,
             output,
-        })
+        }
     }
 }
 
@@ -325,7 +324,8 @@ fn gen_nav(current: &str) -> String {
     nav
 }
 
-fn get_rust_version() -> Result<String, Error> {
+#[throws]
+fn get_rust_version() -> String {
     let mut cmd = Command::new("rustc");
     cmd.add_arg("--version");
     cmd.capture = true;
@@ -337,9 +337,9 @@ fn get_rust_version() -> Result<String, Error> {
 
     // Return the middle part, e.g. "1.46.0"
     if let Some(version) = full.split_whitespace().nth(1) {
-        Ok(version.into())
+        version.into()
     } else {
-        Err(anyhow!("invalid version output"))
+        throw!(anyhow!("invalid version output"))
     }
 }
 
