@@ -25,7 +25,7 @@
       <p>This is a reference to help answer this question: “what will
       my Rust program print if something goes wrong?”</p>
 
-      <p>The examples were compiled with Rust 1.45.2. All
+      <p>The examples were compiled with Rust 1.46.0. All
       output in these examples goes to stderr, nothing goes to
       stdout.</p>
 
@@ -64,19 +64,19 @@ Stack backtrace:
    6: stable_eyre_debug::main
              at /home/runner/work/rust-error-output/rust-error-output/gen/src/bin/stable_eyre_debug.rs:12
    7: std::rt::lang_start::{{closure}}
-             at /rustc/d3fb005a39e62501b8b0b356166e515ae24e2e54/src/libstd/rt.rs:67
+             at /rustc/04488afe34512aa4c33566eb16d8c912a3ae04f9/src/libstd/rt.rs:67
    8: std::rt::lang_start_internal::{{closure}}
-             at /rustc/d3fb005a39e62501b8b0b356166e515ae24e2e54/src/libstd/rt.rs:52
+             at /rustc/04488afe34512aa4c33566eb16d8c912a3ae04f9/src/libstd/rt.rs:52
       std::panicking::try::do_call
-             at /rustc/d3fb005a39e62501b8b0b356166e515ae24e2e54/src/libstd/panicking.rs:297
+             at /rustc/04488afe34512aa4c33566eb16d8c912a3ae04f9/src/libstd/panicking.rs:348
       std::panicking::try
-             at /rustc/d3fb005a39e62501b8b0b356166e515ae24e2e54/src/libstd/panicking.rs:274
+             at /rustc/04488afe34512aa4c33566eb16d8c912a3ae04f9/src/libstd/panicking.rs:325
       std::panic::catch_unwind
-             at /rustc/d3fb005a39e62501b8b0b356166e515ae24e2e54/src/libstd/panic.rs:394
+             at /rustc/04488afe34512aa4c33566eb16d8c912a3ae04f9/src/libstd/panic.rs:394
       std::rt::lang_start_internal
-             at /rustc/d3fb005a39e62501b8b0b356166e515ae24e2e54/src/libstd/rt.rs:51
+             at /rustc/04488afe34512aa4c33566eb16d8c912a3ae04f9/src/libstd/rt.rs:51
    9: std::rt::lang_start
-             at /rustc/d3fb005a39e62501b8b0b356166e515ae24e2e54/src/libstd/rt.rs:67
+             at /rustc/04488afe34512aa4c33566eb16d8c912a3ae04f9/src/libstd/rt.rs:67
   10: main
   11: __libc_start_main
   12: _start
@@ -119,23 +119,23 @@ Stack backtrace:
    6: stable_eyre_unwrap::main
              at /home/runner/work/rust-error-output/rust-error-output/gen/src/bin/stable_eyre_unwrap.rs:12
    7: std::rt::lang_start::{{closure}}
-             at /rustc/d3fb005a39e62501b8b0b356166e515ae24e2e54/src/libstd/rt.rs:67
+             at /rustc/04488afe34512aa4c33566eb16d8c912a3ae04f9/src/libstd/rt.rs:67
    8: std::rt::lang_start_internal::{{closure}}
-             at /rustc/d3fb005a39e62501b8b0b356166e515ae24e2e54/src/libstd/rt.rs:52
+             at /rustc/04488afe34512aa4c33566eb16d8c912a3ae04f9/src/libstd/rt.rs:52
       std::panicking::try::do_call
-             at /rustc/d3fb005a39e62501b8b0b356166e515ae24e2e54/src/libstd/panicking.rs:297
+             at /rustc/04488afe34512aa4c33566eb16d8c912a3ae04f9/src/libstd/panicking.rs:348
       std::panicking::try
-             at /rustc/d3fb005a39e62501b8b0b356166e515ae24e2e54/src/libstd/panicking.rs:274
+             at /rustc/04488afe34512aa4c33566eb16d8c912a3ae04f9/src/libstd/panicking.rs:325
       std::panic::catch_unwind
-             at /rustc/d3fb005a39e62501b8b0b356166e515ae24e2e54/src/libstd/panic.rs:394
+             at /rustc/04488afe34512aa4c33566eb16d8c912a3ae04f9/src/libstd/panic.rs:394
       std::rt::lang_start_internal
-             at /rustc/d3fb005a39e62501b8b0b356166e515ae24e2e54/src/libstd/rt.rs:51
+             at /rustc/04488afe34512aa4c33566eb16d8c912a3ae04f9/src/libstd/rt.rs:51
    9: std::rt::lang_start
-             at /rustc/d3fb005a39e62501b8b0b356166e515ae24e2e54/src/libstd/rt.rs:67
+             at /rustc/04488afe34512aa4c33566eb16d8c912a3ae04f9/src/libstd/rt.rs:67
   10: main
   11: __libc_start_main
   12: _start
-', src/bin/stable_eyre_unwrap.rs:12:5
+', src/bin/stable_eyre_unwrap.rs:12:18
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 </pre><h2>Expect</h2><pre style="background-color:#f3f6fa;">
 <span style="font-weight:bold;color:#a71d5d;">fn </span><span style="font-weight:bold;color:#795da3;">main</span><span style="color:#323232;">() {
@@ -161,23 +161,23 @@ Stack backtrace:
    6: stable_eyre_expect::main
              at /home/runner/work/rust-error-output/rust-error-output/gen/src/bin/stable_eyre_expect.rs:12
    7: std::rt::lang_start::{{closure}}
-             at /rustc/d3fb005a39e62501b8b0b356166e515ae24e2e54/src/libstd/rt.rs:67
+             at /rustc/04488afe34512aa4c33566eb16d8c912a3ae04f9/src/libstd/rt.rs:67
    8: std::rt::lang_start_internal::{{closure}}
-             at /rustc/d3fb005a39e62501b8b0b356166e515ae24e2e54/src/libstd/rt.rs:52
+             at /rustc/04488afe34512aa4c33566eb16d8c912a3ae04f9/src/libstd/rt.rs:52
       std::panicking::try::do_call
-             at /rustc/d3fb005a39e62501b8b0b356166e515ae24e2e54/src/libstd/panicking.rs:297
+             at /rustc/04488afe34512aa4c33566eb16d8c912a3ae04f9/src/libstd/panicking.rs:348
       std::panicking::try
-             at /rustc/d3fb005a39e62501b8b0b356166e515ae24e2e54/src/libstd/panicking.rs:274
+             at /rustc/04488afe34512aa4c33566eb16d8c912a3ae04f9/src/libstd/panicking.rs:325
       std::panic::catch_unwind
-             at /rustc/d3fb005a39e62501b8b0b356166e515ae24e2e54/src/libstd/panic.rs:394
+             at /rustc/04488afe34512aa4c33566eb16d8c912a3ae04f9/src/libstd/panic.rs:394
       std::rt::lang_start_internal
-             at /rustc/d3fb005a39e62501b8b0b356166e515ae24e2e54/src/libstd/rt.rs:51
+             at /rustc/04488afe34512aa4c33566eb16d8c912a3ae04f9/src/libstd/rt.rs:51
    9: std::rt::lang_start
-             at /rustc/d3fb005a39e62501b8b0b356166e515ae24e2e54/src/libstd/rt.rs:67
+             at /rustc/04488afe34512aa4c33566eb16d8c912a3ae04f9/src/libstd/rt.rs:67
   10: main
   11: __libc_start_main
   12: _start
-', src/bin/stable_eyre_expect.rs:12:5
+', src/bin/stable_eyre_expect.rs:12:18
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 </pre><h2>Return</h2><pre style="background-color:#f3f6fa;">
 <span style="font-weight:bold;color:#a71d5d;">fn </span><span style="font-weight:bold;color:#795da3;">main</span><span style="color:#323232;">() -&gt; Result&lt;(), stable_eyre::eyre::Report&gt; {
@@ -203,19 +203,19 @@ Stack backtrace:
    6: stable_eyre_return::main
              at /home/runner/work/rust-error-output/rust-error-output/gen/src/bin/stable_eyre_return.rs:12
    7: std::rt::lang_start::{{closure}}
-             at /rustc/d3fb005a39e62501b8b0b356166e515ae24e2e54/src/libstd/rt.rs:67
+             at /rustc/04488afe34512aa4c33566eb16d8c912a3ae04f9/src/libstd/rt.rs:67
    8: std::rt::lang_start_internal::{{closure}}
-             at /rustc/d3fb005a39e62501b8b0b356166e515ae24e2e54/src/libstd/rt.rs:52
+             at /rustc/04488afe34512aa4c33566eb16d8c912a3ae04f9/src/libstd/rt.rs:52
       std::panicking::try::do_call
-             at /rustc/d3fb005a39e62501b8b0b356166e515ae24e2e54/src/libstd/panicking.rs:297
+             at /rustc/04488afe34512aa4c33566eb16d8c912a3ae04f9/src/libstd/panicking.rs:348
       std::panicking::try
-             at /rustc/d3fb005a39e62501b8b0b356166e515ae24e2e54/src/libstd/panicking.rs:274
+             at /rustc/04488afe34512aa4c33566eb16d8c912a3ae04f9/src/libstd/panicking.rs:325
       std::panic::catch_unwind
-             at /rustc/d3fb005a39e62501b8b0b356166e515ae24e2e54/src/libstd/panic.rs:394
+             at /rustc/04488afe34512aa4c33566eb16d8c912a3ae04f9/src/libstd/panic.rs:394
       std::rt::lang_start_internal
-             at /rustc/d3fb005a39e62501b8b0b356166e515ae24e2e54/src/libstd/rt.rs:51
+             at /rustc/04488afe34512aa4c33566eb16d8c912a3ae04f9/src/libstd/rt.rs:51
    9: std::rt::lang_start
-             at /rustc/d3fb005a39e62501b8b0b356166e515ae24e2e54/src/libstd/rt.rs:67
+             at /rustc/04488afe34512aa4c33566eb16d8c912a3ae04f9/src/libstd/rt.rs:67
   10: main
   11: __libc_start_main
   12: _start
