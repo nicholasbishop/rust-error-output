@@ -83,6 +83,7 @@ impl ErrorType {
 enum Operation {
     Debug,
     Display,
+    AlternateDisplay,
     Unwrap,
     Expect,
     Return,
@@ -93,6 +94,7 @@ impl Operation {
         vec![
             Operation::Debug,
             Operation::Display,
+            Operation::AlternateDisplay,
             Operation::Unwrap,
             Operation::Expect,
             Operation::Return,
@@ -103,6 +105,7 @@ impl Operation {
         match self {
             Operation::Debug => "debug",
             Operation::Display => "display",
+            Operation::AlternateDisplay => "alternate_display",
             Operation::Unwrap => "unwrap",
             Operation::Expect => "expect",
             Operation::Return => "return",
@@ -113,6 +116,7 @@ impl Operation {
         match self {
             Operation::Debug => "Debug",
             Operation::Display => "Display",
+            Operation::AlternateDisplay => "Alternate Display",
             Operation::Unwrap => "Unwrap",
             Operation::Expect => "Expect",
             Operation::Return => "Return",
@@ -193,6 +197,9 @@ fn gen_program(error_type: ErrorType, operation: Operation) -> Program {
     program.add_line(match operation {
         Operation::Debug => "eprintln!(\"{:?}\", make_error().unwrap_err())",
         Operation::Display => "eprintln!(\"{}\", make_error().unwrap_err())",
+        Operation::AlternateDisplay => {
+            "eprintln!(\"{:#}\", make_error().unwrap_err())"
+        }
         Operation::Unwrap => "make_error().unwrap();",
         Operation::Expect => "make_error().expect(\"oh no\");",
         Operation::Return => "make_error()",
