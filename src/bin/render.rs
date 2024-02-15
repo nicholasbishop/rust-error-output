@@ -363,7 +363,9 @@ struct ErrorTemplate {
 impl ErrorTemplate {
     fn write(&self, name: &str) -> Result<(), Error> {
         let path = Path::new("docs").join(format!("{}.html", name));
-        fs::write(path, self.render()?)?;
+        let mut content = self.render()?;
+        content.push('\n');
+        fs::write(path, content)?;
         Ok(())
     }
 }
