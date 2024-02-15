@@ -25,7 +25,7 @@
       <p>This is a reference to help answer this question: “what will
       my Rust program print if something goes wrong?”</p>
 
-      <p>The examples were compiled with Rust 1.46.0. All
+      <p>The examples were compiled with Rust 1.76.0. All
       output in these examples goes to stderr, nothing goes to
       stdout.</p>
 
@@ -34,7 +34,8 @@
 </span><span style="color:#323232;">    panic!(</span><span style="color:#183691;">&quot;oh no&quot;</span><span style="color:#323232;">);
 </span><span style="color:#323232;">}
 </span></pre>
-<pre>thread 'main' panicked at 'oh no', src/bin/panic.rs:2:5
+<pre>thread 'main' panicked at src/bin/panic.rs:2:5:
+oh no
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 </pre>
     </div>
