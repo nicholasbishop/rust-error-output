@@ -259,6 +259,7 @@ impl Highlighter {
 
     fn highlight(&self, code: &str) -> String {
         highlighted_html_for_string(code, &self.ss, &self.syntax, &self.theme)
+            .unwrap()
     }
 }
 
@@ -362,7 +363,9 @@ struct ErrorTemplate {
 impl ErrorTemplate {
     fn write(&self, name: &str) -> Result<(), Error> {
         let path = Path::new("docs").join(format!("{}.html", name));
-        fs::write(path, self.render()?)?;
+        let mut content = self.render()?;
+        content.push('\n');
+        fs::write(path, content)?;
         Ok(())
     }
 }

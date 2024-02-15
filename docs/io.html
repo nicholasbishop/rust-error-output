@@ -25,7 +25,7 @@
       <p>This is a reference to help answer this question: “what will
       my Rust program print if something goes wrong?”</p>
 
-      <p>The examples were compiled with Rust 1.46.0. All
+      <p>The examples were compiled with Rust 1.76.0. All
       output in these examples goes to stderr, nothing goes to
       stdout.</p>
 
@@ -58,14 +58,16 @@
 </span><span style="color:#323232;">    </span><span style="color:#62a35c;">make_error</span><span style="color:#323232;">().</span><span style="color:#62a35c;">unwrap</span><span style="color:#323232;">();
 </span><span style="color:#323232;">}
 </span></pre>
-<pre>thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: Os { code: 2, kind: NotFound, message: "No such file or directory" }', src/bin/io_unwrap.rs:6:18
+<pre>thread 'main' panicked at src/bin/io_unwrap.rs:6:18:
+called `Result::unwrap()` on an `Err` value: Os { code: 2, kind: NotFound, message: "No such file or directory" }
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 </pre><h2>Expect</h2><pre style="background-color:#f3f6fa;">
 <span style="font-weight:bold;color:#a71d5d;">fn </span><span style="font-weight:bold;color:#795da3;">main</span><span style="color:#323232;">() {
 </span><span style="color:#323232;">    </span><span style="color:#62a35c;">make_error</span><span style="color:#323232;">().</span><span style="color:#62a35c;">expect</span><span style="color:#323232;">(</span><span style="color:#183691;">&quot;oh no&quot;</span><span style="color:#323232;">);
 </span><span style="color:#323232;">}
 </span></pre>
-<pre>thread 'main' panicked at 'oh no: Os { code: 2, kind: NotFound, message: "No such file or directory" }', src/bin/io_expect.rs:6:18
+<pre>thread 'main' panicked at src/bin/io_expect.rs:6:18:
+oh no: Os { code: 2, kind: NotFound, message: "No such file or directory" }
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 </pre><h2>Return</h2><pre style="background-color:#f3f6fa;">
 <span style="font-weight:bold;color:#a71d5d;">fn </span><span style="font-weight:bold;color:#795da3;">main</span><span style="color:#323232;">() -&gt; Result&lt;(), std::io::Error&gt; {

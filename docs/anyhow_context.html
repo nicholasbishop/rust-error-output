@@ -25,7 +25,7 @@
       <p>This is a reference to help answer this question: “what will
       my Rust program print if something goes wrong?”</p>
 
-      <p>The examples were compiled with Rust 1.46.0. All
+      <p>The examples were compiled with Rust 1.76.0. All
       output in these examples goes to stderr, nothing goes to
       stdout.</p>
 
@@ -63,20 +63,22 @@ Caused by:
 </span><span style="color:#323232;">    </span><span style="color:#62a35c;">make_error</span><span style="color:#323232;">().</span><span style="color:#62a35c;">unwrap</span><span style="color:#323232;">();
 </span><span style="color:#323232;">}
 </span></pre>
-<pre>thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: oh no
+<pre>thread 'main' panicked at src/bin/anyhow_context_unwrap.rs:8:18:
+called `Result::unwrap()` on an `Err` value: oh no
 
 Caused by:
-    No such file or directory (os error 2)', src/bin/anyhow_context_unwrap.rs:8:18
+    No such file or directory (os error 2)
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 </pre><h2>Expect</h2><pre style="background-color:#f3f6fa;">
 <span style="font-weight:bold;color:#a71d5d;">fn </span><span style="font-weight:bold;color:#795da3;">main</span><span style="color:#323232;">() {
 </span><span style="color:#323232;">    </span><span style="color:#62a35c;">make_error</span><span style="color:#323232;">().</span><span style="color:#62a35c;">expect</span><span style="color:#323232;">(</span><span style="color:#183691;">&quot;oh no&quot;</span><span style="color:#323232;">);
 </span><span style="color:#323232;">}
 </span></pre>
-<pre>thread 'main' panicked at 'oh no: oh no
+<pre>thread 'main' panicked at src/bin/anyhow_context_expect.rs:8:18:
+oh no: oh no
 
 Caused by:
-    No such file or directory (os error 2)', src/bin/anyhow_context_expect.rs:8:18
+    No such file or directory (os error 2)
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 </pre><h2>Return</h2><pre style="background-color:#f3f6fa;">
 <span style="font-weight:bold;color:#a71d5d;">fn </span><span style="font-weight:bold;color:#795da3;">main</span><span style="color:#323232;">() -&gt; Result&lt;(), anyhow::Error&gt; {

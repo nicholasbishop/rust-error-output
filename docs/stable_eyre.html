@@ -25,7 +25,7 @@
       <p>This is a reference to help answer this question: “what will
       my Rust program print if something goes wrong?”</p>
 
-      <p>The examples were compiled with Rust 1.46.0. All
+      <p>The examples were compiled with Rust 1.76.0. All
       output in these examples goes to stderr, nothing goes to
       stdout.</p>
 
@@ -50,36 +50,51 @@
 
 Stack backtrace:
    0: stable_eyre::HookBuilder::make_handler
-             at /home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/stable-eyre-0.2.1/src/lib.rs:145
+             at /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/stable-eyre-0.2.2/src/lib.rs:145:18
    1: stable_eyre::HookBuilder::install::{{closure}}
-             at /home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/stable-eyre-0.2.1/src/lib.rs:168
+             at /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/stable-eyre-0.2.2/src/lib.rs:168:58
    2: eyre::capture_handler
-             at /home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/eyre-0.6.0/src/lib.rs:549
+             at /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/eyre-0.6.12/src/lib.rs:601:23
    3: eyre::error::<impl eyre::Report>::from_std
-             at /home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/eyre-0.6.0/src/error.rs:84
+             at /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/eyre-0.6.12/src/error.rs:90:28
    4: eyre::error::<impl core::convert::From<E> for eyre::Report>::from
-             at /home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/eyre-0.6.0/src/error.rs:453
-   5: stable_eyre_debug::make_error
-             at /home/runner/work/rust-error-output/rust-error-output/gen/src/bin/stable_eyre_debug.rs:2
-   6: stable_eyre_debug::main
-             at /home/runner/work/rust-error-output/rust-error-output/gen/src/bin/stable_eyre_debug.rs:12
-   7: std::rt::lang_start::{{closure}}
-             at /rustc/04488afe34512aa4c33566eb16d8c912a3ae04f9/src/libstd/rt.rs:67
-   8: std::rt::lang_start_internal::{{closure}}
-             at /rustc/04488afe34512aa4c33566eb16d8c912a3ae04f9/src/libstd/rt.rs:52
+             at /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/eyre-0.6.12/src/error.rs:496:9
+   5: <core::result::Result<T,F> as core::ops::try_trait::FromResidual<core::result::Result<core::convert::Infallible,E>>>::from_residual
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/core/src/result.rs:1959:27
+   6: stable_eyre_debug::make_error
+             at /home/runner/work/rust-error-output/rust-error-output/gen/src/bin/stable_eyre_debug.rs:2:8
+   7: stable_eyre_debug::main
+             at /home/runner/work/rust-error-output/rust-error-output/gen/src/bin/stable_eyre_debug.rs:12:23
+   8: core::ops::function::FnOnce::call_once
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/core/src/ops/function.rs:250:5
+   9: std::sys_common::backtrace::__rust_begin_short_backtrace
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/std/src/sys_common/backtrace.rs:155:18
+  10: std::rt::lang_start::{{closure}}
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/std/src/rt.rs:166:18
+  11: core::ops::function::impls::<impl core::ops::function::FnOnce<A> for &F>::call_once
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/core/src/ops/function.rs:284:13
       std::panicking::try::do_call
-             at /rustc/04488afe34512aa4c33566eb16d8c912a3ae04f9/src/libstd/panicking.rs:348
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/std/src/panicking.rs:552:40
       std::panicking::try
-             at /rustc/04488afe34512aa4c33566eb16d8c912a3ae04f9/src/libstd/panicking.rs:325
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/std/src/panicking.rs:516:19
       std::panic::catch_unwind
-             at /rustc/04488afe34512aa4c33566eb16d8c912a3ae04f9/src/libstd/panic.rs:394
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/std/src/panic.rs:142:14
+      std::rt::lang_start_internal::{{closure}}
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/std/src/rt.rs:148:48
+      std::panicking::try::do_call
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/std/src/panicking.rs:552:40
+      std::panicking::try
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/std/src/panicking.rs:516:19
+      std::panic::catch_unwind
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/std/src/panic.rs:142:14
       std::rt::lang_start_internal
-             at /rustc/04488afe34512aa4c33566eb16d8c912a3ae04f9/src/libstd/rt.rs:51
-   9: std::rt::lang_start
-             at /rustc/04488afe34512aa4c33566eb16d8c912a3ae04f9/src/libstd/rt.rs:67
-  10: main
-  11: __libc_start_main
-  12: _start
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/std/src/rt.rs:148:20
+  12: std::rt::lang_start
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/std/src/rt.rs:165:17
+  13: main
+  14: <unknown>
+  15: __libc_start_main
+  16: _start
 
 </pre><h2>Display</h2><pre style="background-color:#f3f6fa;">
 <span style="font-weight:bold;color:#a71d5d;">fn </span><span style="font-weight:bold;color:#795da3;">main</span><span style="color:#323232;">() {
@@ -101,41 +116,57 @@ Stack backtrace:
 </span><span style="color:#323232;">    </span><span style="color:#62a35c;">make_error</span><span style="color:#323232;">().</span><span style="color:#62a35c;">unwrap</span><span style="color:#323232;">();
 </span><span style="color:#323232;">}
 </span></pre>
-<pre>thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: No such file or directory (os error 2)
+<pre>thread 'main' panicked at src/bin/stable_eyre_unwrap.rs:12:18:
+called `Result::unwrap()` on an `Err` value: No such file or directory (os error 2)
 
 Stack backtrace:
    0: stable_eyre::HookBuilder::make_handler
-             at /home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/stable-eyre-0.2.1/src/lib.rs:145
+             at /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/stable-eyre-0.2.2/src/lib.rs:145:18
    1: stable_eyre::HookBuilder::install::{{closure}}
-             at /home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/stable-eyre-0.2.1/src/lib.rs:168
+             at /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/stable-eyre-0.2.2/src/lib.rs:168:58
    2: eyre::capture_handler
-             at /home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/eyre-0.6.0/src/lib.rs:549
+             at /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/eyre-0.6.12/src/lib.rs:601:23
    3: eyre::error::<impl eyre::Report>::from_std
-             at /home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/eyre-0.6.0/src/error.rs:84
+             at /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/eyre-0.6.12/src/error.rs:90:28
    4: eyre::error::<impl core::convert::From<E> for eyre::Report>::from
-             at /home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/eyre-0.6.0/src/error.rs:453
-   5: stable_eyre_unwrap::make_error
-             at /home/runner/work/rust-error-output/rust-error-output/gen/src/bin/stable_eyre_unwrap.rs:2
-   6: stable_eyre_unwrap::main
-             at /home/runner/work/rust-error-output/rust-error-output/gen/src/bin/stable_eyre_unwrap.rs:12
-   7: std::rt::lang_start::{{closure}}
-             at /rustc/04488afe34512aa4c33566eb16d8c912a3ae04f9/src/libstd/rt.rs:67
-   8: std::rt::lang_start_internal::{{closure}}
-             at /rustc/04488afe34512aa4c33566eb16d8c912a3ae04f9/src/libstd/rt.rs:52
+             at /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/eyre-0.6.12/src/error.rs:496:9
+   5: <core::result::Result<T,F> as core::ops::try_trait::FromResidual<core::result::Result<core::convert::Infallible,E>>>::from_residual
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/core/src/result.rs:1959:27
+   6: stable_eyre_unwrap::make_error
+             at /home/runner/work/rust-error-output/rust-error-output/gen/src/bin/stable_eyre_unwrap.rs:2:8
+   7: stable_eyre_unwrap::main
+             at /home/runner/work/rust-error-output/rust-error-output/gen/src/bin/stable_eyre_unwrap.rs:12:5
+   8: core::ops::function::FnOnce::call_once
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/core/src/ops/function.rs:250:5
+   9: std::sys_common::backtrace::__rust_begin_short_backtrace
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/std/src/sys_common/backtrace.rs:155:18
+  10: std::rt::lang_start::{{closure}}
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/std/src/rt.rs:166:18
+  11: core::ops::function::impls::<impl core::ops::function::FnOnce<A> for &F>::call_once
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/core/src/ops/function.rs:284:13
       std::panicking::try::do_call
-             at /rustc/04488afe34512aa4c33566eb16d8c912a3ae04f9/src/libstd/panicking.rs:348
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/std/src/panicking.rs:552:40
       std::panicking::try
-             at /rustc/04488afe34512aa4c33566eb16d8c912a3ae04f9/src/libstd/panicking.rs:325
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/std/src/panicking.rs:516:19
       std::panic::catch_unwind
-             at /rustc/04488afe34512aa4c33566eb16d8c912a3ae04f9/src/libstd/panic.rs:394
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/std/src/panic.rs:142:14
+      std::rt::lang_start_internal::{{closure}}
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/std/src/rt.rs:148:48
+      std::panicking::try::do_call
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/std/src/panicking.rs:552:40
+      std::panicking::try
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/std/src/panicking.rs:516:19
+      std::panic::catch_unwind
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/std/src/panic.rs:142:14
       std::rt::lang_start_internal
-             at /rustc/04488afe34512aa4c33566eb16d8c912a3ae04f9/src/libstd/rt.rs:51
-   9: std::rt::lang_start
-             at /rustc/04488afe34512aa4c33566eb16d8c912a3ae04f9/src/libstd/rt.rs:67
-  10: main
-  11: __libc_start_main
-  12: _start
-', src/bin/stable_eyre_unwrap.rs:12:18
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/std/src/rt.rs:148:20
+  12: std::rt::lang_start
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/std/src/rt.rs:165:17
+  13: main
+  14: <unknown>
+  15: __libc_start_main
+  16: _start
+
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 </pre><h2>Expect</h2><pre style="background-color:#f3f6fa;">
 <span style="font-weight:bold;color:#a71d5d;">fn </span><span style="font-weight:bold;color:#795da3;">main</span><span style="color:#323232;">() {
@@ -143,41 +174,57 @@ note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 </span><span style="color:#323232;">    </span><span style="color:#62a35c;">make_error</span><span style="color:#323232;">().</span><span style="color:#62a35c;">expect</span><span style="color:#323232;">(</span><span style="color:#183691;">&quot;oh no&quot;</span><span style="color:#323232;">);
 </span><span style="color:#323232;">}
 </span></pre>
-<pre>thread 'main' panicked at 'oh no: No such file or directory (os error 2)
+<pre>thread 'main' panicked at src/bin/stable_eyre_expect.rs:12:18:
+oh no: No such file or directory (os error 2)
 
 Stack backtrace:
    0: stable_eyre::HookBuilder::make_handler
-             at /home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/stable-eyre-0.2.1/src/lib.rs:145
+             at /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/stable-eyre-0.2.2/src/lib.rs:145:18
    1: stable_eyre::HookBuilder::install::{{closure}}
-             at /home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/stable-eyre-0.2.1/src/lib.rs:168
+             at /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/stable-eyre-0.2.2/src/lib.rs:168:58
    2: eyre::capture_handler
-             at /home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/eyre-0.6.0/src/lib.rs:549
+             at /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/eyre-0.6.12/src/lib.rs:601:23
    3: eyre::error::<impl eyre::Report>::from_std
-             at /home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/eyre-0.6.0/src/error.rs:84
+             at /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/eyre-0.6.12/src/error.rs:90:28
    4: eyre::error::<impl core::convert::From<E> for eyre::Report>::from
-             at /home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/eyre-0.6.0/src/error.rs:453
-   5: stable_eyre_expect::make_error
-             at /home/runner/work/rust-error-output/rust-error-output/gen/src/bin/stable_eyre_expect.rs:2
-   6: stable_eyre_expect::main
-             at /home/runner/work/rust-error-output/rust-error-output/gen/src/bin/stable_eyre_expect.rs:12
-   7: std::rt::lang_start::{{closure}}
-             at /rustc/04488afe34512aa4c33566eb16d8c912a3ae04f9/src/libstd/rt.rs:67
-   8: std::rt::lang_start_internal::{{closure}}
-             at /rustc/04488afe34512aa4c33566eb16d8c912a3ae04f9/src/libstd/rt.rs:52
+             at /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/eyre-0.6.12/src/error.rs:496:9
+   5: <core::result::Result<T,F> as core::ops::try_trait::FromResidual<core::result::Result<core::convert::Infallible,E>>>::from_residual
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/core/src/result.rs:1959:27
+   6: stable_eyre_expect::make_error
+             at /home/runner/work/rust-error-output/rust-error-output/gen/src/bin/stable_eyre_expect.rs:2:8
+   7: stable_eyre_expect::main
+             at /home/runner/work/rust-error-output/rust-error-output/gen/src/bin/stable_eyre_expect.rs:12:5
+   8: core::ops::function::FnOnce::call_once
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/core/src/ops/function.rs:250:5
+   9: std::sys_common::backtrace::__rust_begin_short_backtrace
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/std/src/sys_common/backtrace.rs:155:18
+  10: std::rt::lang_start::{{closure}}
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/std/src/rt.rs:166:18
+  11: core::ops::function::impls::<impl core::ops::function::FnOnce<A> for &F>::call_once
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/core/src/ops/function.rs:284:13
       std::panicking::try::do_call
-             at /rustc/04488afe34512aa4c33566eb16d8c912a3ae04f9/src/libstd/panicking.rs:348
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/std/src/panicking.rs:552:40
       std::panicking::try
-             at /rustc/04488afe34512aa4c33566eb16d8c912a3ae04f9/src/libstd/panicking.rs:325
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/std/src/panicking.rs:516:19
       std::panic::catch_unwind
-             at /rustc/04488afe34512aa4c33566eb16d8c912a3ae04f9/src/libstd/panic.rs:394
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/std/src/panic.rs:142:14
+      std::rt::lang_start_internal::{{closure}}
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/std/src/rt.rs:148:48
+      std::panicking::try::do_call
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/std/src/panicking.rs:552:40
+      std::panicking::try
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/std/src/panicking.rs:516:19
+      std::panic::catch_unwind
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/std/src/panic.rs:142:14
       std::rt::lang_start_internal
-             at /rustc/04488afe34512aa4c33566eb16d8c912a3ae04f9/src/libstd/rt.rs:51
-   9: std::rt::lang_start
-             at /rustc/04488afe34512aa4c33566eb16d8c912a3ae04f9/src/libstd/rt.rs:67
-  10: main
-  11: __libc_start_main
-  12: _start
-', src/bin/stable_eyre_expect.rs:12:18
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/std/src/rt.rs:148:20
+  12: std::rt::lang_start
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/std/src/rt.rs:165:17
+  13: main
+  14: <unknown>
+  15: __libc_start_main
+  16: _start
+
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 </pre><h2>Return</h2><pre style="background-color:#f3f6fa;">
 <span style="font-weight:bold;color:#a71d5d;">fn </span><span style="font-weight:bold;color:#795da3;">main</span><span style="color:#323232;">() -&gt; Result&lt;(), stable_eyre::eyre::Report&gt; {
@@ -189,36 +236,51 @@ note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 
 Stack backtrace:
    0: stable_eyre::HookBuilder::make_handler
-             at /home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/stable-eyre-0.2.1/src/lib.rs:145
+             at /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/stable-eyre-0.2.2/src/lib.rs:145:18
    1: stable_eyre::HookBuilder::install::{{closure}}
-             at /home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/stable-eyre-0.2.1/src/lib.rs:168
+             at /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/stable-eyre-0.2.2/src/lib.rs:168:58
    2: eyre::capture_handler
-             at /home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/eyre-0.6.0/src/lib.rs:549
+             at /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/eyre-0.6.12/src/lib.rs:601:23
    3: eyre::error::<impl eyre::Report>::from_std
-             at /home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/eyre-0.6.0/src/error.rs:84
+             at /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/eyre-0.6.12/src/error.rs:90:28
    4: eyre::error::<impl core::convert::From<E> for eyre::Report>::from
-             at /home/runner/.cargo/registry/src/github.com-1ecc6299db9ec823/eyre-0.6.0/src/error.rs:453
-   5: stable_eyre_return::make_error
-             at /home/runner/work/rust-error-output/rust-error-output/gen/src/bin/stable_eyre_return.rs:2
-   6: stable_eyre_return::main
-             at /home/runner/work/rust-error-output/rust-error-output/gen/src/bin/stable_eyre_return.rs:12
-   7: std::rt::lang_start::{{closure}}
-             at /rustc/04488afe34512aa4c33566eb16d8c912a3ae04f9/src/libstd/rt.rs:67
-   8: std::rt::lang_start_internal::{{closure}}
-             at /rustc/04488afe34512aa4c33566eb16d8c912a3ae04f9/src/libstd/rt.rs:52
+             at /home/runner/.cargo/registry/src/index.crates.io-6f17d22bba15001f/eyre-0.6.12/src/error.rs:496:9
+   5: <core::result::Result<T,F> as core::ops::try_trait::FromResidual<core::result::Result<core::convert::Infallible,E>>>::from_residual
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/core/src/result.rs:1959:27
+   6: stable_eyre_return::make_error
+             at /home/runner/work/rust-error-output/rust-error-output/gen/src/bin/stable_eyre_return.rs:2:8
+   7: stable_eyre_return::main
+             at /home/runner/work/rust-error-output/rust-error-output/gen/src/bin/stable_eyre_return.rs:12:5
+   8: core::ops::function::FnOnce::call_once
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/core/src/ops/function.rs:250:5
+   9: std::sys_common::backtrace::__rust_begin_short_backtrace
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/std/src/sys_common/backtrace.rs:155:18
+  10: std::rt::lang_start::{{closure}}
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/std/src/rt.rs:166:18
+  11: core::ops::function::impls::<impl core::ops::function::FnOnce<A> for &F>::call_once
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/core/src/ops/function.rs:284:13
       std::panicking::try::do_call
-             at /rustc/04488afe34512aa4c33566eb16d8c912a3ae04f9/src/libstd/panicking.rs:348
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/std/src/panicking.rs:552:40
       std::panicking::try
-             at /rustc/04488afe34512aa4c33566eb16d8c912a3ae04f9/src/libstd/panicking.rs:325
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/std/src/panicking.rs:516:19
       std::panic::catch_unwind
-             at /rustc/04488afe34512aa4c33566eb16d8c912a3ae04f9/src/libstd/panic.rs:394
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/std/src/panic.rs:142:14
+      std::rt::lang_start_internal::{{closure}}
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/std/src/rt.rs:148:48
+      std::panicking::try::do_call
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/std/src/panicking.rs:552:40
+      std::panicking::try
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/std/src/panicking.rs:516:19
+      std::panic::catch_unwind
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/std/src/panic.rs:142:14
       std::rt::lang_start_internal
-             at /rustc/04488afe34512aa4c33566eb16d8c912a3ae04f9/src/libstd/rt.rs:51
-   9: std::rt::lang_start
-             at /rustc/04488afe34512aa4c33566eb16d8c912a3ae04f9/src/libstd/rt.rs:67
-  10: main
-  11: __libc_start_main
-  12: _start
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/std/src/rt.rs:148:20
+  12: std::rt::lang_start
+             at /rustc/07dca489ac2d933c78d3c5158e3f43beefeb02ce/library/std/src/rt.rs:165:17
+  13: main
+  14: <unknown>
+  15: __libc_start_main
+  16: _start
 
 </pre>
     </div>

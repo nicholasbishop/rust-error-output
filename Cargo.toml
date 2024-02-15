@@ -2,12 +2,12 @@
 name = "rust-error-examples"
 version = "0.1.0"
 authors = ["Nicholas Bishop <nicholasbishop@gmail.com>"]
-edition = "2018"
+edition = "2021"
 publish = false
 
 [dependencies]
 anyhow = "1.0"
-askama = "0.10"
-command-run = "0.13"
+askama = "0.12.0"
+command-run = "1.1.0"
 fehler = "1.0"
-syntect = "4.4"
+syntect = "5.2.0"
