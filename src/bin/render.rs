@@ -1,7 +1,6 @@
-use anyhow::{anyhow, Error};
+use anyhow::{Result, bail};
 use askama::Template;
 use command_run::Command;
-use fehler::{throw, throws};
 use std::path::{Path, PathBuf};
 use std::{env, fs};
 use syntect::highlighting::{Color, Theme, ThemeSet};
@@ -270,8 +269,7 @@ struct SourceAndOutput {
 }
 
 impl SourceAndOutput {
-    #[throws]
-    fn new(path: &Path, highlighter: &Highlighter) -> SourceAndOutput {
+    fn new(path: &Path, highlighter: &Highlighter) -> Result<SourceAndOutput> {
         let src = fs::read_to_string(path)?;
         let initial;
         let rest;
@@ -279,7 +277,7 @@ impl SourceAndOutput {
             initial = &src[..index];
             rest = &src[index..];
         } else {
-            throw!(anyhow!("missing fn main"));
+            bail!("missing fn main");
         }
 
         let file_name = path.file_name().unwrap().to_str().unwrap();
@@ -291,7 +289,7 @@ impl SourceAndOutput {
         cmd.log_command = false;
         let cmdout = cmd.run().unwrap();
         if !cmdout.stdout.is_empty() {
-            throw!(anyhow!("unexpected stdout from {}", file_name));
+            bail!("unexpected stdout from {}", file_name);
         }
         let stderr = cmdout.stderr_string_lossy();
 
@@ -302,11 +300,11 @@ impl SourceAndOutput {
 
         let output = format!("<pre>{}</pre>", stderr);
 
-        SourceAndOutput {
+        Ok(SourceAndOutput {
             initial,
             rest,
             output,
-        }
+        })
     }
 }
 
@@ -332,8 +330,7 @@ fn gen_nav(current: &str) -> String {
     nav
 }
 
-#[throws]
-fn get_rust_version() -> String {
+fn get_rust_version() -> Result<String> {
     let mut cmd = Command::new("rustc");
     cmd.add_arg("--version");
     cmd.capture = true;
@@ -345,9 +342,9 @@ fn get_rust_version() -> String {
 
     // Return the middle part, e.g. "1.46.0"
     if let Some(version) = full.split_whitespace().nth(1) {
-        version.into()
+        Ok(version.into())
     } else {
-        throw!(anyhow!("invalid version output"))
+        bail!("invalid version output")
     }
 }
 
@@ -361,7 +358,7 @@ struct ErrorTemplate {
 }
 
 impl ErrorTemplate {
-    fn write(&self, name: &str) -> Result<(), Error> {
+    fn write(&self, name: &str) -> Result<()> {
         let path = Path::new("docs").join(format!("{}.html", name));
         let mut content = self.render()?;
         content.push('\n');
@@ -370,7 +367,7 @@ impl ErrorTemplate {
     }
 }
 
-fn write_panic_source() -> Result<PathBuf, Error> {
+fn write_panic_source() -> Result<PathBuf> {
     let panic_path = Path::new("gen/src/bin/panic.rs");
     fs::write(
         panic_path,
@@ -385,7 +382,7 @@ fn add_panic_example(
     panic_path: &Path,
     rust_version: &str,
     highlighter: &Highlighter,
-) -> Result<(), Error> {
+) -> Result<()> {
     let output = SourceAndOutput::new(panic_path, highlighter)?;
     let content = format!("<h2>Panic</h2>{}{}", output.rest, output.output);
     ErrorTemplate {
@@ -399,7 +396,7 @@ fn add_panic_example(
     Ok(())
 }
 
-fn main() -> Result<(), Error> {
+fn main() -> Result<()> {
     let version = get_rust_version()?;
     let highlighter = Highlighter::new();
 
