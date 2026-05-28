@@ -32,7 +32,7 @@
       <h2>Setup code for thiserror</h2><pre style="background-color:#f3f6fa;">
 <span style="color:#323232;">#[derive(Debug, thiserror::Error)]
 </span><span style="font-weight:bold;color:#a71d5d;">enum </span><span style="color:#323232;">CustomError {
-</span><span style="color:#323232;">    #[error(</span><span style="color:#183691;">&quot;bad thing: {0}&quot;</span><span style="color:#323232;">)]
+</span><span style="color:#323232;">    #[error(</span><span style="color:#183691;">&quot;bad thing&quot;</span><span style="color:#323232;">)]
 </span><span style="color:#323232;">    BadThing(
 </span><span style="color:#323232;">        #[from]
 </span><span style="color:#323232;">        #[source]
@@ -56,13 +56,13 @@
 </span><span style="color:#323232;">    eprintln!(</span><span style="color:#183691;">&quot;{}&quot;</span><span style="color:#323232;">, </span><span style="color:#62a35c;">make_error</span><span style="color:#323232;">().</span><span style="color:#62a35c;">unwrap_err</span><span style="color:#323232;">())
 </span><span style="color:#323232;">}
 </span></pre>
-<pre>bad thing: No such file or directory (os error 2)
+<pre>bad thing
 </pre><h2>Alternate Display</h2><pre style="background-color:#f3f6fa;">
 <span style="font-weight:bold;color:#a71d5d;">fn </span><span style="font-weight:bold;color:#795da3;">main</span><span style="color:#323232;">() {
 </span><span style="color:#323232;">    eprintln!(</span><span style="color:#183691;">&quot;{:#}&quot;</span><span style="color:#323232;">, </span><span style="color:#62a35c;">make_error</span><span style="color:#323232;">().</span><span style="color:#62a35c;">unwrap_err</span><span style="color:#323232;">())
 </span><span style="color:#323232;">}
 </span></pre>
-<pre>bad thing: No such file or directory (os error 2)
+<pre>bad thing
 </pre><h2>Unwrap</h2><pre style="background-color:#f3f6fa;">
 <span style="font-weight:bold;color:#a71d5d;">fn </span><span style="font-weight:bold;color:#795da3;">main</span><span style="color:#323232;">() {
 </span><span style="color:#323232;">    </span><span style="color:#62a35c;">make_error</span><span style="color:#323232;">().</span><span style="color:#62a35c;">unwrap</span><span style="color:#323232;">();

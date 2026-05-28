@@ -136,7 +136,7 @@ fn gen_program(error_type: ErrorType, operation: Operation) -> Program {
     } else if error_type == ErrorType::ThisError {
         program.add_line("#[derive(Debug, thiserror::Error)]");
         program.add_line("enum CustomError {");
-        program.add_line("#[error(\"bad thing: {0}\")]");
+        program.add_line("#[error(\"bad thing\")]");
         program.add_line("BadThing(#[from] #[source] std::io::Error)");
         program.add_line("}");
         program.add_empty();
