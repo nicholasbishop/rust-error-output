@@ -25,7 +25,7 @@
       <p>This is a reference to help answer this question: “what will
       my Rust program print if something goes wrong?”</p>
 
-      <p>The examples were compiled with Rust 1.76.0. All
+      <p>The examples were compiled with Rust 1.95.0. All
       output in these examples goes to stderr, nothing goes to
       stdout.</p>
 
@@ -64,7 +64,8 @@
 </span><span style="color:#323232;">    </span><span style="color:#62a35c;">make_error</span><span style="color:#323232;">().</span><span style="color:#62a35c;">unwrap</span><span style="color:#323232;">();
 </span><span style="color:#323232;">}
 </span></pre>
-<pre>thread 'main' panicked at src/bin/thiserror_unwrap.rs:12:18:
+<pre>
+thread 'main' (583177) panicked at src/bin/thiserror_unwrap.rs:12:18:
 called `Result::unwrap()` on an `Err` value: BadThing(Os { code: 2, kind: NotFound, message: "No such file or directory" })
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 </pre><h2>Expect</h2><pre style="background-color:#f3f6fa;">
@@ -72,7 +73,8 @@ note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 </span><span style="color:#323232;">    </span><span style="color:#62a35c;">make_error</span><span style="color:#323232;">().</span><span style="color:#62a35c;">expect</span><span style="color:#323232;">(</span><span style="color:#183691;">&quot;oh no&quot;</span><span style="color:#323232;">);
 </span><span style="color:#323232;">}
 </span></pre>
-<pre>thread 'main' panicked at src/bin/thiserror_expect.rs:12:18:
+<pre>
+thread 'main' (583178) panicked at src/bin/thiserror_expect.rs:12:18:
 oh no: BadThing(Os { code: 2, kind: NotFound, message: "No such file or directory" })
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 </pre><h2>Return</h2><pre style="background-color:#f3f6fa;">
