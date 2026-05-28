@@ -1,6 +1,7 @@
 use anyhow::{Result, bail};
 use askama::Template;
 use command_run::Command;
+use regex::Regex;
 use std::path::{Path, PathBuf};
 use std::{env, fs};
 use syntect::highlighting::{Color, Theme, ThemeSet};
@@ -231,6 +232,18 @@ fn normalize_backtrace_paths(stderr: String) -> String {
     stderr.replace(&home, runner_home)
 }
 
+/// Panic messages look like this:
+///
+///     thread 'main' (583153) panicked at src/bin/anyhow_unwrap.rs:6:18:
+///
+/// The "583153" is the process ID, which changes on every run. Replace
+/// it with a constant value to avoid unwanted churn.
+fn replace_process_ids_with_constant(stderr: &str) -> String {
+    let re = Regex::new(r"thread 'main' \((\d+)\) panicked at").unwrap();
+    re.replace_all(stderr, "thread 'main' (556677) panicked at")
+        .into()
+}
+
 struct Highlighter {
     ss: SyntaxSet,
     // TODO
@@ -294,6 +307,7 @@ impl SourceAndOutput {
         let stderr = cmdout.stderr_string_lossy();
 
         let stderr = normalize_backtrace_paths(stderr.into());
+        let stderr = replace_process_ids_with_constant(&stderr);
 
         let initial = highlighter.highlight(initial);
         let rest = highlighter.highlight(rest);
